@@ -109,51 +109,51 @@ const generateImageUrl = (seed, colors) => `https://api.dicebear.com/7.x/shapes/
 
 const INITIAL_DATA = [
     // 武器图标 - 剑类
-    { id: 1, name: 'sword_fire_01', resourceKey: 'weapon_sword_fire_01', displayName: '火焰之剑图标', path: 'assets/images/sword_icons/sword_fire_01.png', physicalPath: 'uuid-abc123.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword1', 'ff6b6b'), uploadTime: '2026-01-15 10:30:00', uploader: 'admin', hasOptimized: true },
-    { id: 2, name: 'sword_ice_01', resourceKey: 'weapon_sword_ice_01', displayName: '寒冰之剑 蓝色主题', path: 'assets/images/sword_icons/sword_ice_01.png', physicalPath: 'uuid-def456.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword2', '4ecdc4'), uploadTime: '2026-01-16 14:20:00', uploader: 'editor1', hasOptimized: true },
+    { id: 1, name: 'sword_fire_01', resourceKey: 'weapon_sword_fire_01', displayName: '火焰之剑图标', path: 'assets/images/sword_icons/sword_fire_01.png', physicalPath: 'uuid-abc123.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword1', 'ff6b6b'), uploadTime: '2026-01-15 10:30:00', uploader: 'admin', hasOptimized: true, width: 256, height: 256 },
+    { id: 2, name: 'sword_ice_01', resourceKey: 'weapon_sword_ice_01', displayName: '寒冰之剑 蓝色主题', path: 'assets/images/sword_icons/sword_ice_01.png', physicalPath: 'uuid-def456.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword2', '4ecdc4'), uploadTime: '2026-01-16 14:20:00', uploader: 'editor1', hasOptimized: true, width: 256, height: 256 },
 
     // 武器图标 - 弓类
-    { id: 3, name: 'bow_wind', resourceKey: 'weapon_bow_wind', displayName: '疾风之弓', path: 'assets/images/bow_icons/bow_wind.png', physicalPath: 'uuid-bow001.png', mediaType: 'image', category: 'bow_icon', url: generateImageUrl('bow1', '90ee90'), uploadTime: '2026-01-16 09:30:00', uploader: 'editor2', hasOptimized: false },
+    { id: 3, name: 'bow_wind', resourceKey: 'weapon_bow_wind', displayName: '疾风之弓', path: 'assets/images/bow_icons/bow_wind.png', physicalPath: 'uuid-bow001.png', mediaType: 'image', category: 'bow_icon', url: generateImageUrl('bow1', '90ee90'), uploadTime: '2026-01-16 09:30:00', uploader: 'editor2', hasOptimized: false, width: 256, height: 256 },
 
     // 防具图标
-    { id: 4, name: 'helmet_steel', resourceKey: 'armor_helmet_steel', displayName: '精钢头盔', path: 'assets/images/armor_icons/helmet_steel.png', physicalPath: 'uuid-helmet01.png', mediaType: 'image', category: 'armor_icon', url: generateImageUrl('helmet1', 'c0c0c0'), uploadTime: '2026-01-15 14:00:00', uploader: 'admin', hasOptimized: true },
-    { id: 5, name: 'shield_dragon', resourceKey: 'armor_shield_dragon', displayName: '龙鳞盾牌', path: 'assets/images/armor_icons/shield_dragon.png', physicalPath: 'uuid-shield01.png', mediaType: 'image', category: 'armor_icon', url: generateImageUrl('shield1', 'ff4500'), uploadTime: '2026-01-16 10:20:00', uploader: 'editor1', hasOptimized: false },
+    { id: 4, name: 'helmet_steel', resourceKey: 'armor_helmet_steel', displayName: '精钢头盔', path: 'assets/images/armor_icons/helmet_steel.png', physicalPath: 'uuid-helmet01.png', mediaType: 'image', category: 'armor_icon', url: generateImageUrl('helmet1', 'c0c0c0'), uploadTime: '2026-01-15 14:00:00', uploader: 'admin', hasOptimized: true, width: 256, height: 256 },
+    { id: 5, name: 'shield_dragon', resourceKey: 'armor_shield_dragon', displayName: '龙鳞盾牌', path: 'assets/images/armor_icons/shield_dragon.png', physicalPath: 'uuid-shield01.png', mediaType: 'image', category: 'armor_icon', url: generateImageUrl('shield1', 'ff4500'), uploadTime: '2026-01-16 10:20:00', uploader: 'editor1', hasOptimized: false, width: 256, height: 256 },
 
     // 消耗品图标
-    { id: 6, name: 'potion_hp_red', resourceKey: 'item_potion_hp_red', displayName: '红色生命药水', path: 'assets/images/consumable_icons/potion_hp_red.png', physicalPath: 'uuid-potion01.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion1', 'dc143c'), uploadTime: '2026-01-15 08:30:00', uploader: 'admin', hasOptimized: true },
-    { id: 7, name: 'potion_mp_blue', resourceKey: 'item_potion_mp_blue', displayName: '蓝色魔力药水', path: 'assets/images/consumable_icons/potion_mp_blue.png', physicalPath: 'uuid-potion02.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion2', '4169e1'), uploadTime: '2026-01-15 08:35:00', uploader: 'admin', hasOptimized: true },
-    { id: 8, name: 'scroll_tp', resourceKey: 'item_scroll_teleport', displayName: '传送卷轴', path: 'assets/images/consumable_icons/scroll_tp.png', physicalPath: 'uuid-scroll01.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('scroll1', '9370db'), uploadTime: '2026-01-16 15:00:00', uploader: 'editor2', hasOptimized: false },
+    { id: 6, name: 'potion_hp_red', resourceKey: 'item_potion_hp_red', displayName: '红色生命药水', path: 'assets/images/consumable_icons/potion_hp_red.png', physicalPath: 'uuid-potion01.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion1', 'dc143c'), uploadTime: '2026-01-15 08:30:00', uploader: 'admin', hasOptimized: true, width: 128, height: 128 },
+    { id: 7, name: 'potion_mp_blue', resourceKey: 'item_potion_mp_blue', displayName: '蓝色魔力药水', path: 'assets/images/consumable_icons/potion_mp_blue.png', physicalPath: 'uuid-potion02.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion2', '4169e1'), uploadTime: '2026-01-15 08:35:00', uploader: 'admin', hasOptimized: true, width: 128, height: 128 },
+    { id: 8, name: 'scroll_tp', resourceKey: 'item_scroll_teleport', displayName: '传送卷轴', path: 'assets/images/consumable_icons/scroll_tp.png', physicalPath: 'uuid-scroll01.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('scroll1', '9370db'), uploadTime: '2026-01-16 15:00:00', uploader: 'editor2', hasOptimized: false, width: 128, height: 128 },
 
     // 材料图标
-    { id: 9, name: 'ore_iron', resourceKey: 'material_ore_iron', displayName: '铁矿石', path: 'assets/images/material_icons/ore_iron.png', physicalPath: 'uuid-ore01.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('ore1', '708090'), uploadTime: '2026-01-15 16:00:00', uploader: 'admin', hasOptimized: false },
-    { id: 10, name: 'gem_ruby', resourceKey: 'material_gem_ruby', displayName: '红宝石', path: 'assets/images/material_icons/gem_ruby.png', physicalPath: 'uuid-gem01.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('gem1', 'e0115f'), uploadTime: '2026-01-16 11:00:00', uploader: 'editor1', hasOptimized: true },
+    { id: 9, name: 'ore_iron', resourceKey: 'material_ore_iron', displayName: '铁矿石', path: 'assets/images/material_icons/ore_iron.png', physicalPath: 'uuid-ore01.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('ore1', '708090'), uploadTime: '2026-01-15 16:00:00', uploader: 'admin', hasOptimized: false, width: 128, height: 128 },
+    { id: 10, name: 'gem_ruby', resourceKey: 'material_gem_ruby', displayName: '红宝石', path: 'assets/images/material_icons/gem_ruby.png', physicalPath: 'uuid-gem01.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('gem1', 'e0115f'), uploadTime: '2026-01-16 11:00:00', uploader: 'editor1', hasOptimized: true, width: 128, height: 128 },
 
     // 英雄立绘
-    { id: 11, name: 'hero_knight', resourceKey: 'char_hero_knight', displayName: '圣骑士阿瑟', path: 'assets/images/hero_portraits/knight.png', physicalPath: 'uuid-knight01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('knight1', 'ffd700'), uploadTime: '2026-01-14 10:00:00', uploader: 'artist1', hasOptimized: true },
-    { id: 12, name: 'hero_mage', resourceKey: 'char_hero_mage', displayName: '魔法师梅林', path: 'assets/images/hero_portraits/mage.png', physicalPath: 'uuid-mage01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('mage1', '9370db'), uploadTime: '2026-01-14 11:00:00', uploader: 'artist1', hasOptimized: true },
-    { id: 13, name: 'hero_archer', resourceKey: 'char_hero_archer', displayName: '弓箭手艾莉丝', path: 'assets/images/hero_portraits/archer.png', physicalPath: 'uuid-archer01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('archer1', '90ee90'), uploadTime: '2026-01-15 09:00:00', uploader: 'artist2', hasOptimized: false },
+    { id: 11, name: 'hero_knight', resourceKey: 'char_hero_knight', displayName: '圣骑士阿瑟', path: 'assets/images/hero_portraits/knight.png', physicalPath: 'uuid-knight01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('knight1', 'ffd700'), uploadTime: '2026-01-14 10:00:00', uploader: 'artist1', hasOptimized: true, width: 512, height: 768 },
+    { id: 12, name: 'hero_mage', resourceKey: 'char_hero_mage', displayName: '魔法师梅林', path: 'assets/images/hero_portraits/mage.png', physicalPath: 'uuid-mage01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('mage1', '9370db'), uploadTime: '2026-01-14 11:00:00', uploader: 'artist1', hasOptimized: true, width: 512, height: 768 },
+    { id: 13, name: 'hero_archer', resourceKey: 'char_hero_archer', displayName: '弓箭手艾莉丝', path: 'assets/images/hero_portraits/archer.png', physicalPath: 'uuid-archer01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('archer1', '90ee90'), uploadTime: '2026-01-15 09:00:00', uploader: 'artist2', hasOptimized: false, width: 512, height: 768 },
 
     // NPC立绘
-    { id: 14, name: 'npc_merchant', resourceKey: 'char_npc_merchant', displayName: '商人老王', path: 'assets/images/npc_portraits/merchant.png', physicalPath: 'uuid-merchant01.png', mediaType: 'image', category: 'npc_portrait', url: generateImageUrl('merchant1', 'daa520'), uploadTime: '2026-01-16 13:00:00', uploader: 'artist1', hasOptimized: false },
+    { id: 14, name: 'npc_merchant', resourceKey: 'char_npc_merchant', displayName: '商人老王', path: 'assets/images/npc_portraits/merchant.png', physicalPath: 'uuid-merchant01.png', mediaType: 'image', category: 'npc_portrait', url: generateImageUrl('merchant1', 'daa520'), uploadTime: '2026-01-16 13:00:00', uploader: 'artist1', hasOptimized: false, width: 512, height: 768 },
 
     // 公告图片
-    { id: 15, name: 'event_announce_v2', resourceKey: 'announce_event_v2_0', displayName: '2.0版本更新公告', path: 'assets/images/event_announce/v2.png', physicalPath: 'uuid-announce01.png', mediaType: 'image', category: 'event_announce', url: generateImageUrl('announce1', 'e2e8f0'), uploadTime: '2026-01-17 09:15:00', uploader: 'admin', hasOptimized: true },
-    { id: 16, name: 'event_spring_festival', resourceKey: 'announce_spring_festival', displayName: '春节活动公告', path: 'assets/images/event_announce/spring_festival.png', physicalPath: 'uuid-announce02.png', mediaType: 'image', category: 'event_announce', url: generateImageUrl('announce2', 'ff6b6b'), uploadTime: '2026-01-18 10:00:00', uploader: 'admin', hasOptimized: false },
-    { id: 17, name: 'system_maintenance', resourceKey: 'announce_system_maintenance', displayName: '系统维护通知', path: 'assets/images/system_announce/maintenance.png', physicalPath: 'uuid-announce03.png', mediaType: 'image', category: 'system_announce', url: generateImageUrl('announce3', 'ffa500'), uploadTime: '2026-01-17 16:00:00', uploader: 'admin', hasOptimized: false },
+    { id: 15, name: 'event_announce_v2', resourceKey: 'announce_event_v2_0', displayName: '2.0版本更新公告', path: 'assets/images/event_announce/v2.png', physicalPath: 'uuid-announce01.png', mediaType: 'image', category: 'event_announce', url: generateImageUrl('announce1', 'e2e8f0'), uploadTime: '2026-01-17 09:15:00', uploader: 'admin', hasOptimized: true, width: 1920, height: 1080 },
+    { id: 16, name: 'event_spring_festival', resourceKey: 'announce_spring_festival', displayName: '春节活动公告', path: 'assets/images/event_announce/spring_festival.png', physicalPath: 'uuid-announce02.png', mediaType: 'image', category: 'event_announce', url: generateImageUrl('announce2', 'ff6b6b'), uploadTime: '2026-01-18 10:00:00', uploader: 'admin', hasOptimized: false, width: 1920, height: 1080 },
+    { id: 17, name: 'system_maintenance', resourceKey: 'announce_system_maintenance', displayName: '系统维护通知', path: 'assets/images/system_announce/maintenance.png', physicalPath: 'uuid-announce03.png', mediaType: 'image', category: 'system_announce', url: generateImageUrl('announce3', 'ffa500'), uploadTime: '2026-01-17 16:00:00', uploader: 'admin', hasOptimized: false, width: 1920, height: 1080 },
 
     // UI素材
-    { id: 18, name: 'btn_confirm', resourceKey: 'ui_button_confirm', displayName: '确认按钮', path: 'assets/images/buttons/confirm.png', physicalPath: 'uuid-btn01.png', mediaType: 'image', category: 'button_ui', url: generateImageUrl('btn1', '4caf50'), uploadTime: '2026-01-14 14:00:00', uploader: 'ui_designer', hasOptimized: true },
-    { id: 19, name: 'btn_cancel', resourceKey: 'ui_button_cancel', displayName: '取消按钮', path: 'assets/images/buttons/cancel.png', physicalPath: 'uuid-btn02.png', mediaType: 'image', category: 'button_ui', url: generateImageUrl('btn2', 'f44336'), uploadTime: '2026-01-14 14:05:00', uploader: 'ui_designer', hasOptimized: true },
-    { id: 20, name: 'panel_inventory', resourceKey: 'ui_panel_inventory', displayName: '背包面板', path: 'assets/images/panels/inventory.png', physicalPath: 'uuid-panel01.png', mediaType: 'image', category: 'panel_ui', url: generateImageUrl('panel1', '795548'), uploadTime: '2026-01-15 10:00:00', uploader: 'ui_designer', hasOptimized: false },
+    { id: 18, name: 'btn_confirm', resourceKey: 'ui_button_confirm', displayName: '确认按钮', path: 'assets/images/buttons/confirm.png', physicalPath: 'uuid-btn01.png', mediaType: 'image', category: 'button_ui', url: generateImageUrl('btn1', '4caf50'), uploadTime: '2026-01-14 14:00:00', uploader: 'ui_designer', hasOptimized: true, width: 200, height: 80 },
+    { id: 19, name: 'btn_cancel', resourceKey: 'ui_button_cancel', displayName: '取消按钮', path: 'assets/images/buttons/cancel.png', physicalPath: 'uuid-btn02.png', mediaType: 'image', category: 'button_ui', url: generateImageUrl('btn2', 'f44336'), uploadTime: '2026-01-14 14:05:00', uploader: 'ui_designer', hasOptimized: true, width: 200, height: 80 },
+    { id: 20, name: 'panel_inventory', resourceKey: 'ui_panel_inventory', displayName: '背包面板', path: 'assets/images/panels/inventory.png', physicalPath: 'uuid-panel01.png', mediaType: 'image', category: 'panel_ui', url: generateImageUrl('panel1', '795548'), uploadTime: '2026-01-15 10:00:00', uploader: 'ui_designer', hasOptimized: false, width: 800, height: 600 },
 
     // 背景图
-    { id: 21, name: 'bg_forest', resourceKey: 'bg_scene_forest', displayName: '森林场景背景', path: 'assets/images/scene_bg/forest.png', physicalPath: 'uuid-bg01.png', mediaType: 'image', category: 'scene_bg', url: generateImageUrl('bg1', '228b22'), uploadTime: '2026-01-13 10:00:00', uploader: 'bg_artist', hasOptimized: true },
-    { id: 22, name: 'bg_castle', resourceKey: 'bg_scene_castle', displayName: '城堡场景背景', path: 'assets/images/scene_bg/castle.png', physicalPath: 'uuid-bg02.png', mediaType: 'image', category: 'scene_bg', url: generateImageUrl('bg2', '8b4513'), uploadTime: '2026-01-13 11:00:00', uploader: 'bg_artist', hasOptimized: true },
+    { id: 21, name: 'bg_forest', resourceKey: 'bg_scene_forest', displayName: '森林场景背景', path: 'assets/images/scene_bg/forest.png', physicalPath: 'uuid-bg01.png', mediaType: 'image', category: 'scene_bg', url: generateImageUrl('bg1', '228b22'), uploadTime: '2026-01-13 10:00:00', uploader: 'bg_artist', hasOptimized: true, width: 2560, height: 1440 },
+    { id: 22, name: 'bg_castle', resourceKey: 'bg_scene_castle', displayName: '城堡场景背景', path: 'assets/images/scene_bg/castle.png', physicalPath: 'uuid-bg02.png', mediaType: 'image', category: 'scene_bg', url: generateImageUrl('bg2', '8b4513'), uploadTime: '2026-01-13 11:00:00', uploader: 'bg_artist', hasOptimized: true, width: 2560, height: 1440 },
 
     // 视频资源
-    { id: 23, name: 'login_default_anim', resourceKey: 'video_login_default', displayName: '默认登录动画', path: 'assets/videos/login_default/anim.mp4', physicalPath: 'uuid-video01.mp4', mediaType: 'video', category: 'login_default', url: null, uploadTime: '2026-01-12 15:00:00', uploader: 'video_editor', hasOptimized: false },
-    { id: 24, name: 'cutscene_chapter1', resourceKey: 'video_story_chapter1', displayName: '第一章剧情动画', path: 'assets/videos/story/chapter1.mp4', physicalPath: 'uuid-video02.mp4', mediaType: 'video', category: 'story_cutscene', url: null, uploadTime: '2026-01-10 14:00:00', uploader: 'video_editor', hasOptimized: false },
-    { id: 25, name: 'skill_fireball_anim', resourceKey: 'video_skill_fireball', displayName: '火球术技能动画', path: 'assets/videos/skill_videos/fireball.mp4', physicalPath: 'uuid-video03.mp4', mediaType: 'video', category: 'skill_video', url: null, uploadTime: '2026-01-11 10:00:00', uploader: 'fx_artist', hasOptimized: false },
+    { id: 23, name: 'login_default_anim', resourceKey: 'video_login_default', displayName: '默认登录动画', path: 'assets/videos/login_default/anim.mp4', physicalPath: 'uuid-video01.mp4', mediaType: 'video', category: 'login_default', url: null, uploadTime: '2026-01-12 15:00:00', uploader: 'video_editor', hasOptimized: false, videoWidth: 1920, videoHeight: 1080, duration: 45 },
+    { id: 24, name: 'cutscene_chapter1', resourceKey: 'video_story_chapter1', displayName: '第一章剧情动画', path: 'assets/videos/story/chapter1.mp4', physicalPath: 'uuid-video02.mp4', mediaType: 'video', category: 'story_cutscene', url: null, uploadTime: '2026-01-10 14:00:00', uploader: 'video_editor', hasOptimized: false, videoWidth: 1920, videoHeight: 1080, duration: 120 },
+    { id: 25, name: 'skill_fireball_anim', resourceKey: 'video_skill_fireball', displayName: '火球术技能动画', path: 'assets/videos/skill_videos/fireball.mp4', physicalPath: 'uuid-video03.mp4', mediaType: 'video', category: 'skill_video', url: null, uploadTime: '2026-01-11 10:00:00', uploader: 'fx_artist', hasOptimized: false, videoWidth: 1280, videoHeight: 720, duration: 8 },
 
     // 音频资源
     { id: 26, name: 'sfx_click_01', resourceKey: 'audio_sfx_click_01', displayName: '点击音效1', path: 'assets/audio/click_sfx/click_01.mp3', physicalPath: 'uuid-audio01.mp3', mediaType: 'audio', category: 'click_sfx', url: null, uploadTime: '2026-01-14 16:00:00', uploader: 'sound_designer', hasOptimized: false },
@@ -186,6 +186,8 @@ export default function ResourceManager() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isCategoryManagerOpen, setIsCategoryManagerOpen] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [previewItem, setPreviewItem] = useState(null);
     const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
     const [migrationData, setMigrationData] = useState(null);
     const [selectedMigrationTarget, setSelectedMigrationTarget] = useState(null);
@@ -274,6 +276,11 @@ export default function ResourceManager() {
     const handleEdit = (item) => {
         setCurrentItem({ ...item });
         setIsEditModalOpen(true);
+    };
+
+    const handleOpenPreview = (item) => {
+        setPreviewItem(item);
+        setIsPreviewOpen(true);
     };
 
     const handleSaveItem = (e) => {
@@ -541,7 +548,7 @@ export default function ResourceManager() {
         }
     };
 
-    const handleSingleFileChange = (e) => {
+    const handleSingleFileChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
             let type = 'image';
@@ -554,14 +561,31 @@ export default function ResourceManager() {
             }
 
             const folder = getFolderByCategory(type, newCategoryVal);
+            const objectUrl = URL.createObjectURL(file);
 
-            setCurrentItem(prev => ({
-                ...prev,
-                url: URL.createObjectURL(file),
+            const newItemData = {
+                url: objectUrl,
                 mediaType: type,
                 category: newCategoryVal,
                 path: `assets/${type}s/${folder}/${file.name}`,
-                physicalPath: prev.physicalPath || `uuid-${Math.random().toString(36).substr(2, 9)}.${file.name.split('.').pop()}`
+                physicalPath: currentItem.physicalPath || `uuid-${Math.random().toString(36).substr(2, 9)}.${file.name.split('.').pop()}`
+            };
+
+            // 获取图片或视频的分辨率
+            if (type === 'image') {
+                const dims = await getImageDimensions(objectUrl);
+                newItemData.width = dims.width;
+                newItemData.height = dims.height;
+            } else if (type === 'video') {
+                const dims = await getVideoDimensions(objectUrl);
+                newItemData.videoWidth = dims.width;
+                newItemData.videoHeight = dims.height;
+                newItemData.duration = dims.duration;
+            }
+
+            setCurrentItem(prev => ({
+                ...prev,
+                ...newItemData
             }));
         }
     };
@@ -1194,6 +1218,34 @@ export default function ResourceManager() {
         if (item.mediaType === 'audio') return <div className="flex flex-col items-center justify-center h-full"><Music size={32} className="text-amber-500 mb-2" /><audio controls className="w-full px-4" src={item.url} /></div>;
     };
 
+    // 获取图片分辨率
+    const getImageDimensions = (imageUrl) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                resolve({ width: img.naturalWidth, height: img.naturalHeight });
+            };
+            img.onerror = () => {
+                resolve({ width: 0, height: 0 });
+            };
+            img.src = imageUrl;
+        });
+    };
+
+    // 获取视频分辨率
+    const getVideoDimensions = (videoUrl) => {
+        return new Promise((resolve) => {
+            const video = document.createElement('video');
+            video.onloadedmetadata = () => {
+                resolve({ width: video.videoWidth, height: video.videoHeight, duration: video.duration });
+            };
+            video.onerror = () => {
+                resolve({ width: 0, height: 0, duration: 0 });
+            };
+            video.src = videoUrl;
+        });
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
             <input type="file" multiple accept="image/*,video/*,audio/*" ref={fileInputRef} onChange={handleBatchUpload} className="hidden" />
@@ -1456,7 +1508,11 @@ export default function ResourceManager() {
                                         </div>
 
                                         {/* 预览区 */}
-                                        <div className="w-full h-32 bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center relative overflow-hidden">
+                                        <div
+                                            className="w-full h-32 bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center relative overflow-hidden cursor-pointer hover:bg-gradient-to-br hover:from-slate-100 hover:to-slate-200 transition-colors"
+                                            onClick={() => handleOpenPreview(item)}
+                                            title="点击放大预览"
+                                        >
                                             {renderCardPreview(item)}
                                             {/* 媒体类型标签 - 右上 */}
                                             <span className={`absolute top-2 right-2 px-2 py-1 text-[10px] uppercase font-bold rounded-md z-20 flex items-center gap-1 ${item.mediaType === 'video' ? 'bg-blue-500/80 text-white' : item.mediaType === 'audio' ? 'bg-amber-500/80 text-white' : 'bg-emerald-500/80 text-white'}`}>
@@ -1499,6 +1555,13 @@ export default function ResourceManager() {
 
                                         {/* 操作按钮 */}
                                         <div className="absolute bottom-2 right-2 flex items-center gap-2 z-40">
+                                            <button
+                                                onClick={() => handleOpenPreview(item)}
+                                                className="p-2 bg-white rounded-lg text-blue-600 hover:bg-blue-50 shadow-md transition-all hover:text-blue-700"
+                                                title="预览"
+                                            >
+                                                <Play size={16} />
+                                            </button>
                                             <button
                                                 onClick={() => {
                                                     navigator.clipboard.writeText(item.resourceKey);
@@ -1578,6 +1641,45 @@ export default function ResourceManager() {
                                 </div>
                             </div>
 
+                            {/* 分辨率信息 */}
+                            {(currentItem.mediaType === 'image' || currentItem.mediaType === 'video') && (
+                                <div className="grid grid-cols-2 gap-4 mb-6">
+                                    {currentItem.mediaType === 'image' && (
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-500 uppercase">图片分辨率</label>
+                                            <input
+                                                type="text"
+                                                value={currentItem.width && currentItem.height ? `${currentItem.width} × ${currentItem.height}` : '获取中...'}
+                                                disabled
+                                                className="w-full px-3 py-2 border border-slate-200 rounded-lg font-mono text-xs bg-slate-50 text-slate-600"
+                                            />
+                                        </div>
+                                    )}
+                                    {currentItem.mediaType === 'video' && (
+                                        <>
+                                            <div>
+                                                <label className="text-xs font-bold text-slate-500 uppercase">视频分辨率</label>
+                                                <input
+                                                    type="text"
+                                                    value={currentItem.videoWidth && currentItem.videoHeight ? `${currentItem.videoWidth} × ${currentItem.videoHeight}` : '获取中...'}
+                                                    disabled
+                                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg font-mono text-xs bg-slate-50 text-slate-600"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-slate-500 uppercase">时长</label>
+                                                <input
+                                                    type="text"
+                                                    value={currentItem.duration ? `${Math.floor(currentItem.duration / 60)}:${String(Math.floor(currentItem.duration % 60)).padStart(2, '0')}` : '获取中...'}
+                                                    disabled
+                                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg font-mono text-xs bg-slate-50 text-slate-600"
+                                                />
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+
                             <div className="flex items-center gap-2 mb-6">
                                 <input type="checkbox" checked={currentItem.hasOptimized || false} disabled className="w-4 h-4 cursor-not-allowed" />
                                 <label className="text-sm text-slate-600 cursor-not-allowed">已上传ASTC优化版本（系统设置）</label>
@@ -1611,6 +1713,96 @@ export default function ResourceManager() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* 预览弹窗 */}
+            {isPreviewOpen && previewItem && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+                        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <h2 className="text-lg font-bold text-slate-800">
+                                {previewItem.mediaType === 'image' ? '图片预览' : previewItem.mediaType === 'video' ? '视频预览' : '音频预览'}
+                            </h2>
+                            <button
+                                onClick={() => setIsPreviewOpen(false)}
+                                className="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-hidden bg-slate-900 flex items-center justify-center">
+                            {previewItem.mediaType === 'image' && previewItem.url ? (
+                                <img src={previewItem.url} alt={previewItem.name} className="max-w-full max-h-full object-contain" />
+                            ) : previewItem.mediaType === 'video' && previewItem.url ? (
+                                <video
+                                    controls
+                                    className="max-w-full max-h-full object-contain"
+                                    autoPlay
+                                >
+                                    <source src={previewItem.url} />
+                                </video>
+                            ) : previewItem.mediaType === 'audio' ? (
+                                <div className="flex flex-col items-center gap-4">
+                                    <Music size={64} className="text-amber-500 opacity-30" />
+                                    <audio
+                                        controls
+                                        className="w-96"
+                                        autoPlay
+                                    >
+                                        <source src={previewItem.url} />
+                                    </audio>
+                                </div>
+                            ) : (
+                                <div className="text-center text-slate-400 flex flex-col items-center gap-2">
+                                    <Upload size={32} />
+                                    <span className="text-sm">无预览资源</span>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/50">
+                            <div className="grid grid-cols-2 gap-4 text-xs text-slate-600 mb-3">
+                                <div>
+                                    <span className="text-slate-500 block mb-1">资源名称</span>
+                                    <span className="font-semibold text-slate-900">{previewItem.displayName || previewItem.name}</span>
+                                </div>
+                                <div>
+                                    <span className="text-slate-500 block mb-1">资源Key</span>
+                                    <span className="font-mono text-slate-900">{previewItem.resourceKey}</span>
+                                </div>
+                                {previewItem.mediaType === 'image' && previewItem.width && previewItem.height && (
+                                    <div>
+                                        <span className="text-slate-500 block mb-1">图片分辨率</span>
+                                        <span className="font-semibold text-slate-900">{previewItem.width} × {previewItem.height}</span>
+                                    </div>
+                                )}
+                                {previewItem.mediaType === 'video' && previewItem.videoWidth && previewItem.videoHeight && (
+                                    <>
+                                        <div>
+                                            <span className="text-slate-500 block mb-1">视频分辨率</span>
+                                            <span className="font-semibold text-slate-900">{previewItem.videoWidth} × {previewItem.videoHeight}</span>
+                                        </div>
+                                        {previewItem.duration && (
+                                            <div>
+                                                <span className="text-slate-500 block mb-1">时长</span>
+                                                <span className="font-semibold text-slate-900">
+                                                    {String(Math.floor(previewItem.duration / 60)).padStart(2, '0')}:{String(Math.floor(previewItem.duration % 60)).padStart(2, '0')}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                            <button
+                                onClick={() => setIsPreviewOpen(false)}
+                                className="w-full py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 shadow-lg text-sm font-medium"
+                            >
+                                关闭预览
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
