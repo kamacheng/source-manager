@@ -1,0 +1,205 @@
+{
+    "knowledge_base_info": {
+        "project_db": "WhhtE9D9N6SYooiRSmud4",
+        "total_records": 171,
+        "embedding_model": "Qwen3-Embedding-8b",
+        "reranking_model": "Qwen3-Reranker-8b",
+        "api_key": "sk-liomwimciyykbprjkecotbrnsoplnoxctgqxsubvxbnnmnho",
+        "description": "来自20份游戏开发相关Excel文档的知识库"
+    },
+    "sources": [
+        {
+            "id": "b5a58cef-230f-49a2-932e-31a273716b62",
+            "name": "头部资源规范",
+            "records": 1,
+            "categories": [
+                "资源规范",
+                "头部资源"
+            ]
+        },
+        {
+            "id": "89279b34-4d24-42d0-a81a-522264c00388",
+            "name": "协议规范",
+            "records": 4,
+            "categories": [
+                "协议",
+                "规范"
+            ]
+        },
+        {
+            "id": "1287e7ac-857c-41cf-a182-c0cb0b86a695",
+            "name": "装备展示文档",
+            "records": 4,
+            "categories": [
+                "装备",
+                "展示"
+            ]
+        },
+        {
+            "id": "0a3b8641-ec92-4f2e-b010-27507124b777",
+            "name": "UI相关规范",
+            "records": 1,
+            "categories": [
+                "UI",
+                "规范"
+            ]
+        },
+        {
+            "id": "f9cb98ed-b9aa-4c2e-99ad-8e5c2b39b1ba",
+            "name": "系统规范",
+            "records": 4,
+            "categories": [
+                "系统",
+                "规范"
+            ]
+        },
+        {
+            "id": "6eee89cd-f4d6-40de-8136-a819d5d8df05",
+            "name": "通用规范-系统相关",
+            "records": 4,
+            "categories": [
+                "通用规范",
+                "系统"
+            ]
+        },
+        {
+            "id": "e6a52bd2-b12c-4d19-a14c-d7d1ed8c864c",
+            "name": "游戏后台系统",
+            "records": 31,
+            "categories": [
+                "后台系统",
+                "游戏管理"
+            ]
+        },
+        {
+            "id": "401e6d5a-7c65-4267-b4fc-9dc0f8f878ac",
+            "name": "数据系统",
+            "records": 4,
+            "categories": [
+                "数据",
+                "系统"
+            ]
+        },
+        {
+            "id": "5021dd58-a8af-4eb3-b7f6-c11b3d923275",
+            "name": "角色成长",
+            "records": 9,
+            "categories": [
+                "角色",
+                "成长系统"
+            ]
+        },
+        {
+            "id": "ad8a067a-0724-45b6-abc9-8a82c3d8b2bf",
+            "name": "关卡系统与难度",
+            "records": 12,
+            "categories": [
+                "关卡",
+                "难度",
+                "游戏机制"
+            ]
+        },
+        {
+            "id": "3e8aa4b6-4517-46af-8187-ef7e76d5fb08",
+            "name": "装备系统与突破",
+            "records": 5,
+            "categories": [
+                "装备",
+                "系统"
+            ]
+        },
+        {
+            "id": "0293b25c-d7b5-4c43-a0a9-e0222639266f",
+            "name": "通用规范-日常获取规则",
+            "records": 1,
+            "categories": [
+                "通用规范",
+                "获取规则"
+            ]
+        },
+        {
+            "id": "b3f0db6b-806b-4231-bbcc-c6ed0685b5bc",
+            "name": "战斗系统",
+            "records": 7,
+            "categories": [
+                "战斗",
+                "系统"
+            ]
+        },
+        {
+            "id": "15a13e5c-d546-4b4c-af29-74034b18340f",
+            "name": "通用规范-按钮通用效果",
+            "records": 2,
+            "categories": [
+                "通用规范",
+                "UI效果"
+            ]
+        },
+        {
+            "id": "602e200f-305c-4d2d-9f30-6b7e4a7b611d",
+            "name": "游戏框架",
+            "records": 10,
+            "categories": [
+                "框架",
+                "游戏设计"
+            ]
+        },
+        {
+            "id": "ee01cfaf-9b94-4ff7-9882-68de057cc816",
+            "name": "货币",
+            "records": 18,
+            "categories": [
+                "货币",
+                "经济系统"
+            ]
+        },
+        {
+            "id": "feb8296c-832a-457f-84b8-eb04ddb1c62e.xlsx",
+            "name": "宠物",
+            "records": 14,
+            "categories": [
+                "宠物",
+                "系统"
+            ]
+        },
+        {
+            "id": "cf604731-64dd-4bdd-8dde-2e205fba5744",
+            "name": "技能",
+            "records": 8,
+            "categories": [
+                "技能",
+                "战斗"
+            ]
+        },
+        {
+            "id": "3ba776a0-abe5-4614-a3b7-e66e50414028",
+            "name": "游戏难度与平衡",
+            "records": 15,
+            "categories": [
+                "难度",
+                "平衡",
+                "游戏设计"
+            ]
+        },
+        {
+            "id": "73f4ca5f-3635-420a-8fcb-4ccc1da6457f",
+            "name": "道具",
+            "records": 14,
+            "categories": [
+                "道具",
+                "物品系统"
+            ]
+        },
+        {
+            "id": "d746f64e-74a1-4b7c-98af-5030007d3d6c",
+            "name": "表情与动画",
+            "records": 3,
+            "categories": [
+                "表情",
+                "动画",
+                "UI"
+            ]
+        }
+    ],
+    "note": "这是一个完整的游戏开发文档知识库，包含系统设计、规范、机制等多个方面的内容"
+}

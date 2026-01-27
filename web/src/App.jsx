@@ -207,6 +207,13 @@ export default function ResourceManager() {
     const [isBatchMigrationModalOpen, setIsBatchMigrationModalOpen] = useState(false);
     const [selectedTargetCategory, setSelectedTargetCategory] = useState(null); // 批量迁移目标分类
 
+    // 本地文件夹信息
+    const [isLocalFolderModalOpen, setIsLocalFolderModalOpen] = useState(false);
+    const [localFolderFiles, setLocalFolderFiles] = useState([]);
+    const [localFolderPath, setLocalFolderPath] = useState('');
+    const folderInputRef = useRef(null);
+    const [currentView, setCurrentView] = useState('uploaded'); // 'uploaded' 或 'builtin'
+
     const showNotification = (message, type = 'success') => {
         setNotification({ message, type });
         setTimeout(() => setNotification(null), 3000);
@@ -417,6 +424,49 @@ export default function ResourceManager() {
         if (filterMediaType === 'all' || filterCategory === 'all') return false;
         // 只有叶子节点（最终分类）才能上传
         return isLeafCategory(filterMediaType, filterCategory);
+    };
+
+    // 本地文件夹处理函数
+    const handleLocalFolderSelect = async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        // 获取文件夹路径（从第一个文件推断）
+        const firstFilePath = files[0].webkitRelativePath || files[0].name;
+        const folderPath = firstFilePath.substring(0, firstFilePath.lastIndexOf('/')) || firstFilePath;
+
+        setLocalFolderPath(folderPath);
+
+        // 构建文件列表信息
+        const fileList = files.map((file) => {
+            const relativePath = file.webkitRelativePath || file.name;
+            return {
+                name: file.name,
+                path: relativePath,
+                size: file.size,
+                type: file.type || '未知类型',
+                lastModified: new Date(file.lastModified).toLocaleString('zh-CN'),
+                fullPath: folderPath + '/' + relativePath
+            };
+        });
+
+        setLocalFolderFiles(fileList);
+        setIsLocalFolderModalOpen(true);
+        addLog('扫描本地文件夹', `扫描了文件夹: ${folderPath}, 共 ${fileList.length} 个文件`);
+    };
+
+    const triggerLocalFolderSelect = () => {
+        folderInputRef.current.click();
+    };
+
+    // 检查资源是否来自本地文件夹
+    const isResourceFromLocal = (resourceKey) => {
+        for (const file of localFolderFiles) {
+            if (file.path.includes(resourceKey) || file.name === resourceKey) {
+                return true;
+            }
+        }
+        return false;
     };
 
     const getCategoryColor = (mediaType, categoryId) => {
@@ -1089,6 +1139,10 @@ export default function ResourceManager() {
         return 0;
     });
 
+    // 按照来源分组资源
+    const uploadedItems = sortedItems.filter(item => !isResourceFromLocal(item.resourceKey));
+    const builtinItems = sortedItems.filter(item => isResourceFromLocal(item.resourceKey));
+
     // 计算分类下的资源数量（包括所有子孙分类）
     const getCategoryItemCount = (mediaType, categoryId) => {
         const category = getAllCategories(mediaType).find(c => c.id === categoryId);
@@ -1249,6 +1303,7 @@ export default function ResourceManager() {
     return (
         <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
             <input type="file" multiple accept="image/*,video/*,audio/*" ref={fileInputRef} onChange={handleBatchUpload} className="hidden" />
+            <input type="file" webkitdirectory="true" ref={folderInputRef} onChange={handleLocalFolderSelect} className="hidden" />
 
             {/* 顶部导航 */}
             <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
@@ -1278,94 +1333,142 @@ export default function ResourceManager() {
                 {/* 左侧边栏 - 树形分类 */}
                 <aside className="w-72 bg-white border-r border-slate-200 p-4 overflow-y-auto sticky top-16 h-[calc(100vh-76px)] hidden lg:block">
                     <div>
-                        <h2 className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3 px-2">资源分类</h2>
+                        {/* 页签 */}
+                        <div className="flex gap-2 mb-4 border-b border-slate-200">
+                            <button
+                                onClick={() => setCurrentView('uploaded')}
+                                className={`flex-1 px-3 py-2 text-sm font-medium transition-all ${currentView === 'uploaded' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-slate-600 hover:text-slate-900'}`}
+                            >
+                                后台上传资源
+                            </button>
+                            <button
+                                onClick={() => setCurrentView('builtin')}
+                                className={`flex-1 px-3 py-2 text-sm font-medium transition-all ${currentView === 'builtin' ? 'border-b-2 border-green-600 text-green-600' : 'text-slate-600 hover:text-slate-900'}`}
+                            >
+                                客户端内置资源
+                            </button>
+                        </div>
 
-                        {/* 全部资源 */}
-                        <button onClick={() => { setFilterMediaType('all'); setFilterCategory('all'); }}
-                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left mb-3 ${filterMediaType === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-700 hover:bg-slate-100'}`}>
-                            <div className="flex items-center gap-2">
-                                <FolderOpen size={16} />
-                                <span>全部资源</span>
-                            </div>
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${filterMediaType === 'all' ? 'bg-indigo-500' : 'bg-slate-200'}`}>{items.length}</span>
-                        </button>
+                        {/* 后台上传资源视图 */}
+                        {currentView === 'uploaded' && (
+                            <div>
+                                <h2 className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3 px-2">资源分类</h2>
 
-                        <div className="border-t border-slate-200 pt-3 mb-3"></div>
-
-                        {/* 树形分类结构 */}
-                        {[
-                            { id: 'image', label: '图片资源', icon: ImageIcon },
-                            { id: 'video', label: '视频资源', icon: Video },
-                            { id: 'audio', label: '音频资源', icon: Music },
-                        ].map(type => {
-                            const typeCount = items.filter(item => item.mediaType === type.id).length;
-                            const isExpanded = expandedCategories[type.id];
-                            const hasCategories = categoryConfig[type.id] && categoryConfig[type.id].length > 0;
-
-                            return (
-                                <div key={type.id} className="mb-2">
-                                    {/* 资源类型 */}
-                                    <div className="flex items-center gap-1">
-                                        {hasCategories && (
-                                            <button
-                                                onClick={() => setExpandedCategories(prev => ({ ...prev, [type.id]: !prev[type.id] }))}
-                                                className="p-1 hover:bg-slate-100 rounded transition-colors"
-                                            >
-                                                {isExpanded ? <ChevronDown size={14} className="text-slate-500" /> : <ChevronRight size={14} className="text-slate-500" />}
-                                            </button>
-                                        )}
-                                        <button
-                                            onClick={() => {
-                                                setFilterMediaType(type.id);
-                                                setFilterCategory('all');
-                                                addRecentCategory(type.id);
-                                                // 自动展开
-                                                if (hasCategories && !isExpanded) {
-                                                    setExpandedCategories(prev => ({ ...prev, [type.id]: true }));
-                                                }
-                                            }}
-                                            className={`flex-1 flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all text-left ${filterMediaType === type.id && filterCategory === 'all' ? 'bg-indigo-100 text-indigo-700' : 'text-slate-700 hover:bg-slate-50'}`}
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <type.icon size={16} />
-                                                <span>{type.label}</span>
-                                            </div>
-                                            <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">{typeCount}</span>
-                                        </button>
+                                {/* 全部资源 */}
+                                <button onClick={() => { setFilterMediaType('all'); setFilterCategory('all'); }}
+                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left mb-3 ${filterMediaType === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-700 hover:bg-slate-100'}`}>
+                                    <div className="flex items-center gap-2">
+                                        <FolderOpen size={16} />
+                                        <span>全部资源</span>
                                     </div>
+                                    <span className={`text-xs px-2 py-0.5 rounded-full ${filterMediaType === 'all' ? 'bg-indigo-500' : 'bg-slate-200'}`}>{items.length}</span>
+                                </button>
 
-                                    {/* 递归渲染业务分类树 */}
-                                    {isExpanded && hasCategories && (
-                                        <div className="ml-5 mt-1 space-y-1 border-l-2 border-slate-100 pl-2">
-                                            {categoryConfig[type.id].map(cat => renderCategoryTreeNode(cat, type.id, 0))}
+                                <div className="border-t border-slate-200 pt-3 mb-3"></div>
+
+                                {/* 树形分类结构 */}
+                                {[
+                                    { id: 'image', label: '图片资源', icon: ImageIcon },
+                                    { id: 'video', label: '视频资源', icon: Video },
+                                    { id: 'audio', label: '音频资源', icon: Music },
+                                ].map(type => {
+                                    const typeCount = items.filter(item => item.mediaType === type.id).length;
+                                    const isExpanded = expandedCategories[type.id];
+                                    const hasCategories = categoryConfig[type.id] && categoryConfig[type.id].length > 0;
+
+                                    return (
+                                        <div key={type.id} className="mb-2">
+                                            {/* 资源类型 */}
+                                            <div className="flex items-center gap-1">
+                                                {hasCategories && (
+                                                    <button
+                                                        onClick={() => setExpandedCategories(prev => ({ ...prev, [type.id]: !prev[type.id] }))}
+                                                        className="p-1 hover:bg-slate-100 rounded transition-colors"
+                                                    >
+                                                        {isExpanded ? <ChevronDown size={14} className="text-slate-500" /> : <ChevronRight size={14} className="text-slate-500" />}
+                                                    </button>
+                                                )}
+                                                <button
+                                                    onClick={() => {
+                                                        setFilterMediaType(type.id);
+                                                        setFilterCategory('all');
+                                                        addRecentCategory(type.id);
+                                                        // 自动展开
+                                                        if (hasCategories && !isExpanded) {
+                                                            setExpandedCategories(prev => ({ ...prev, [type.id]: true }));
+                                                        }
+                                                    }}
+                                                    className={`flex-1 flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all text-left ${filterMediaType === type.id && filterCategory === 'all' ? 'bg-indigo-100 text-indigo-700' : 'text-slate-700 hover:bg-slate-50'}`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <type.icon size={16} />
+                                                        <span>{type.label}</span>
+                                                    </div>
+                                                    <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">{typeCount}</span>
+                                                </button>
+                                            </div>
+
+                                            {/* 递归渲染业务分类树 */}
+                                            {isExpanded && hasCategories && (
+                                                <div className="ml-5 mt-1 space-y-1 border-l-2 border-slate-100 pl-2">
+                                                    {categoryConfig[type.id].map(cat => renderCategoryTreeNode(cat, type.id, 0))}
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
-                            );
-                        })}
+                                    );
+                                })}
 
-                        {/* 收藏分类 */}
-                        {favoriteCategories.length > 0 && (
-                            <div className="mt-6 pt-3 border-t border-slate-200">
-                                <h3 className="text-xs font-bold text-slate-500 uppercase mb-2 px-2 flex items-center gap-1">
-                                    <Star size={12} fill="currentColor" /> 收藏分类
-                                </h3>
-                                <div className="space-y-1">
-                                    {favoriteCategories.map(catId => {
-                                        const cat = getAllCategories(filterMediaType).find(c => c.id === catId);
-                                        if (!cat) return null;
-                                        return (
-                                            <button
-                                                key={catId}
-                                                onClick={() => { setFilterCategory(catId); addRecentCategory(catId); }}
-                                                className="w-full text-left px-2 py-1.5 text-xs text-slate-600 hover:bg-amber-50 hover:text-amber-700 rounded transition-colors flex items-center gap-1.5"
+                                {/* 收藏分类 */}
+                                {favoriteCategories.length > 0 && (
+                                    <div className="mt-6 pt-3 border-t border-slate-200">
+                                        <h3 className="text-xs font-bold text-slate-500 uppercase mb-2 px-2 flex items-center gap-1">
+                                            <Star size={12} fill="currentColor" /> 收藏分类
+                                        </h3>
+                                        <div className="space-y-1">
+                                            {favoriteCategories.map(catId => {
+                                                const cat = getAllCategories(filterMediaType).find(c => c.id === catId);
+                                                if (!cat) return null;
+                                                return (
+                                                    <button
+                                                        key={catId}
+                                                        onClick={() => { setFilterCategory(catId); addRecentCategory(catId); }}
+                                                        className="w-full text-left px-2 py-1.5 text-xs text-slate-600 hover:bg-amber-50 hover:text-amber-700 rounded transition-colors flex items-center gap-1.5"
+                                                    >
+                                                        <Star size={10} fill="currentColor" className="text-yellow-400" />
+                                                        <span className="truncate">{cat.label}</span>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* 客户端内置资源视图 */}
+                        {currentView === 'builtin' && (
+                            <div>
+                                <h2 className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3 px-2">本地文件列表</h2>
+                                {localFolderFiles.length === 0 ? (
+                                    <div className="text-center py-6 text-slate-400">
+                                        <FolderOpen size={24} className="mx-auto mb-2 opacity-30" />
+                                        <p className="text-xs">未扫描本地资源</p>
+                                        <p className="text-[10px] mt-1">点击"读取本地资源"开始扫描</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-1 max-h-[calc(100vh-300px)] overflow-y-auto">
+                                        {localFolderFiles.map((file, index) => (
+                                            <div
+                                                key={index}
+                                                className="px-3 py-2 text-sm text-slate-700 hover:bg-green-50 rounded transition-colors border border-transparent hover:border-green-200 cursor-pointer"
+                                                title={file.path}
                                             >
-                                                <Star size={10} fill="currentColor" className="text-yellow-400" />
-                                                <span className="truncate">{cat.label}</span>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
+                                                <div className="font-medium truncate text-green-700">{file.name}</div>
+                                                <div className="text-[10px] text-slate-500 truncate">{file.path}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
@@ -1384,11 +1487,20 @@ export default function ResourceManager() {
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && addSearchHistory(searchTerm)} />
                                 </div>
-                                <button onClick={triggerBatchUpload} disabled={!isSubCategorySelected() || isUploading}
-                                    className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg shadow-md transition-all flex-shrink-0 w-full md:w-auto font-medium whitespace-nowrap ${isSubCategorySelected() && !isUploading ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer' : 'bg-slate-300 text-slate-500 cursor-not-allowed opacity-60'}`}>
-                                    {isUploading ? <Loader size={18} className="animate-spin" /> : <Upload size={18} />}
-                                    <span>{isUploading ? '上传中...' : '批量上传'}</span>
-                                </button>
+                                <div className="flex items-center gap-2 flex-shrink-0 w-full md:w-auto">
+                                    <button onClick={triggerBatchUpload} disabled={!isSubCategorySelected() || isUploading}
+                                        className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg shadow-md transition-all font-medium whitespace-nowrap ${isSubCategorySelected() && !isUploading ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer' : 'bg-slate-300 text-slate-500 cursor-not-allowed opacity-60'}`}
+                                        title="上传资源文件到后台">
+                                        {isUploading ? <Loader size={18} className="animate-spin" /> : <Upload size={18} />}
+                                        <span className="hidden sm:inline">{isUploading ? '上传中...' : '上传资源'}</span>
+                                    </button>
+                                    <button onClick={triggerLocalFolderSelect}
+                                        className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg shadow-md transition-all bg-green-600 text-white hover:bg-green-700 cursor-pointer font-medium whitespace-nowrap"
+                                        title="读取客户端本地资源文件信息">
+                                        <FolderOpen size={18} />
+                                        <span className="hidden sm:inline">读取本地资源</span>
+                                    </button>
+                                </div>
                             </div>
 
                             {/* 高级筛选 */}
@@ -1490,9 +1602,10 @@ export default function ResourceManager() {
                                     className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1"
                                 >
                                     <CheckCircle size={14} />
-                                    {selectedItems.length === sortedItems.length ? '取消全选' : '全选'}
+                                    {selectedItems.length === sortedItems.length && sortedItems.length > 0 ? '取消全选' : '全选'}
                                 </button>
                             </div>
+
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                 {sortedItems.map(item => (
                                     <div key={item.id} className="group bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg hover:border-indigo-300 transition-all duration-300 relative">
@@ -1514,11 +1627,9 @@ export default function ResourceManager() {
                                             title="点击放大预览"
                                         >
                                             {renderCardPreview(item)}
-                                            {/* 媒体类型标签 - 右上 */}
                                             <span className={`absolute top-2 right-2 px-2 py-1 text-[10px] uppercase font-bold rounded-md z-20 flex items-center gap-1 ${item.mediaType === 'video' ? 'bg-blue-500/80 text-white' : item.mediaType === 'audio' ? 'bg-amber-500/80 text-white' : 'bg-emerald-500/80 text-white'}`}>
                                                 {item.mediaType.toUpperCase()}
                                             </span>
-                                            {/* ASTC 优化状态标签 - 右下 (仅图片显示) */}
                                             {item.mediaType === 'image' && (
                                                 item.hasOptimized ? (
                                                     <span className="absolute bottom-2 right-2 px-2 py-1 text-[10px] bg-green-500 text-white rounded-md z-20 flex items-center gap-1 font-bold">
@@ -2155,6 +2266,104 @@ export default function ResourceManager() {
                                 );
                             })
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* 本地文件夹信息显示弹窗 */}
+            {isLocalFolderModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden max-h-[90vh] flex flex-col">
+                        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-green-50 to-emerald-50">
+                            <div>
+                                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                    <FolderOpen size={22} className="text-green-600" />
+                                    本地文件夹信息
+                                </h2>
+                                <p className="text-xs text-slate-600 mt-1">路径: {localFolderPath}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full">
+                                    共 {localFolderFiles.length} 个文件
+                                </span>
+                                <button onClick={() => setIsLocalFolderModalOpen(false)} className="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600">
+                                    <X size={20} />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto">
+                            <div className="p-6">
+                                {localFolderFiles.length === 0 ? (
+                                    <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+                                        <FolderOpen size={48} className="mb-3 opacity-20" />
+                                        <p className="text-sm">暂无文件</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {localFolderFiles.map((file, index) => (
+                                            <div key={index} className="flex items-center gap-4 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors border border-slate-200">
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-sm font-medium text-slate-800 truncate flex-1">
+                                                            {file.name}
+                                                        </span>
+                                                        <span className="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded whitespace-nowrap">
+                                                            {(file.size / 1024).toFixed(2)} KB
+                                                        </span>
+                                                    </div>
+                                                    <div className="text-xs text-slate-600 font-mono truncate mb-1">
+                                                        {file.path}
+                                                    </div>
+                                                    <div className="flex items-center gap-4 text-[10px] text-slate-500">
+                                                        <span>类型: {file.type || '未知'}</span>
+                                                        <span>修改: {file.lastModified}</span>
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={() => {
+                                                        navigator.clipboard.writeText(file.path);
+                                                        showNotification(`已复制路径: ${file.path}`, 'success');
+                                                    }}
+                                                    className="p-2 bg-white rounded-lg text-slate-600 hover:bg-slate-100 shadow-sm transition-colors flex-shrink-0"
+                                                    title="复制路径"
+                                                >
+                                                    <Copy size={14} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+                            <div className="text-sm text-slate-600">
+                                <span className="font-medium">总大小:</span>
+                                <span className="text-indigo-600 font-semibold ml-1">
+                                    {(localFolderFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)} MB
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => {
+                                        const allPaths = localFolderFiles.map(f => f.path).join('\n');
+                                        navigator.clipboard.writeText(allPaths);
+                                        showNotification('已复制所有文件路径', 'success');
+                                    }}
+                                    className="px-4 py-2 bg-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors flex items-center gap-2"
+                                >
+                                    <Copy size={14} />
+                                    复制所有路径
+                                </button>
+                                <button
+                                    onClick={() => setIsLocalFolderModalOpen(false)}
+                                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                                >
+                                    关闭
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

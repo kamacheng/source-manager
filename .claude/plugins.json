@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "lastUpdated": 1769055209536,
+  "plugins": [
+    {
+      "filename": "git-commit-helper",
+      "type": "skill",
+      "metadata": {
+        "sourcePath": "skills\\development\\git-commit-helper",
+        "filename": "git-commit-helper",
+        "name": "Git Commit Helper",
+        "description": "Generate descriptive commit messages by analyzing git diffs. Use when the user asks for help writing commit messages or reviewing staged changes.",
+        "category": "skills",
+        "type": "skill",
+        "size": 4372,
+        "contentHash": "37344ea1848305f6090075eb23e6e1f8808a79a02e032f6ac96b4ed74e298081",
+        "installedAt": 1769055209527,
+        "updatedAt": 1769055209527
+      }
+    }
+  ]
+}
