@@ -3,7 +3,8 @@ import {
     Upload, Search, Trash2, Edit2, Save, X, Check, Image as ImageIcon,
     Video, Music, FileAudio, Play, AlertCircle, FolderOpen, Film, Tag,
     Settings, Plus, MinusCircle, Clock, User, Calendar, Filter, History,
-    Star, TrendingUp, Copy, CheckCircle, XCircle, Loader, ChevronDown, ChevronRight
+    Star, TrendingUp, Copy, CheckCircle, XCircle, Loader, ChevronDown, ChevronRight,
+    Link2, AlertTriangle
 } from 'lucide-react';
 
 // --- 初始配置常量 ---
@@ -214,6 +215,11 @@ export default function ResourceManager() {
     const folderInputRef = useRef(null);
     const [currentView, setCurrentView] = useState('uploaded'); // 'uploaded' 或 'builtin'
 
+    // 资源引用检查
+    const [isRefCheckModalOpen, setIsRefCheckModalOpen] = useState(false);
+    const [refCheckResults, setRefCheckResults] = useState(null);
+    const [isCheckingRef, setIsCheckingRef] = useState(false);
+
     const showNotification = (message, type = 'success') => {
         setNotification({ message, type });
         setTimeout(() => setNotification(null), 3000);
@@ -268,6 +274,108 @@ export default function ResourceManager() {
             const filtered = prev.filter(id => id !== categoryId);
             return [categoryId, ...filtered].slice(0, 5);
         });
+    };
+
+    // 资源引用检查
+    const checkResourceReferences = () => {
+        setIsCheckingRef(true);
+
+        // 模拟数据库中的资源 sourceKey 和客户端配置中的引用
+        // 在实际应用中，这些数据应该来自后端数据库
+
+        // 后台数据库中存在的 sourceKey 列表
+        const databaseSourceKeys = new Set(items.map(item => item.resourceKey));
+
+        // 模拟客户端配置中的引用（道具ID -> sourceKey 映射）
+        // 这里为了演示，创建一些示例应用配置
+        const clientConfigs = [
+            {
+                source: '道具配置 v1.0',
+                references: [
+                    { itemId: 'hero_item_001', sourceKey: 'char_hero_knight', usageType: '角色头像' },
+                    { itemId: 'hero_item_002', sourceKey: 'char_hero_mage', usageType: '角色头像' },
+                    { itemId: 'weapon_001', sourceKey: 'weapon_sword_fire_01', usageType: '武器图标' },
+                    { itemId: 'weapon_002', sourceKey: 'deleted_weapon_key', usageType: '武器图标' }, // 被删除的引用
+                ]
+            },
+            {
+                source: '技能配置 v2.1',
+                references: [
+                    { itemId: 'skill_fireball', sourceKey: 'video_skill_fireball', usageType: '技能特效' },
+                    { itemId: 'skill_ice', sourceKey: 'deleted_skill_effect', usageType: '技能特效' }, // 被删除的引用
+                ]
+            },
+            {
+                source: 'UI配置 v3.0',
+                references: [
+                    { itemId: 'ui_confirm_btn', sourceKey: 'ui_button_confirm', usageType: '按钮素材' },
+                    { itemId: 'bg_scene_001', sourceKey: 'bg_scene_forest', usageType: '背景图' },
+                ]
+            },
+            {
+                source: '音频配置 v1.5',
+                references: [
+                    { itemId: 'bgm_001', sourceKey: 'audio_bgm_main_theme', usageType: '背景音乐' },
+                    { itemId: 'sfx_click', sourceKey: 'audio_sfx_click_01', usageType: 'UI音效' },
+                    { itemId: 'voice_hero', sourceKey: 'missing_voice_key', usageType: '角色语音' }, // 被删除的引用
+                ]
+            }
+        ];
+
+        // 统计引用
+        const deletedReferences = [];
+        const validReferences = { total: 0, byType: {} };
+
+        clientConfigs.forEach(config => {
+            config.references.forEach(ref => {
+                if (!databaseSourceKeys.has(ref.sourceKey)) {
+                    // 找到被删除的引用
+                    deletedReferences.push({
+                        sourceKey: ref.sourceKey,
+                        sources: config.source,
+                        itemId: ref.itemId,
+                        usageType: ref.usageType
+                    });
+                } else {
+                    // 有效的引用
+                    validReferences.total++;
+                    if (!validReferences.byType[ref.usageType]) {
+                        validReferences.byType[ref.usageType] = 0;
+                    }
+                    validReferences.byType[ref.usageType]++;
+                }
+            });
+        });
+
+        // 合并相同的被删除引用
+        const mergedDeletedRefs = {};
+        deletedReferences.forEach(ref => {
+            if (!mergedDeletedRefs[ref.sourceKey]) {
+                mergedDeletedRefs[ref.sourceKey] = {
+                    sourceKey: ref.sourceKey,
+                    sources: [ref.sources],
+                    usageDetails: []
+                };
+            } else if (!mergedDeletedRefs[ref.sourceKey].sources.includes(ref.sources)) {
+                mergedDeletedRefs[ref.sourceKey].sources.push(ref.sources);
+            }
+            mergedDeletedRefs[ref.sourceKey].usageDetails.push({
+                itemId: ref.itemId,
+                usageType: ref.usageType
+            });
+        });
+
+        setTimeout(() => {
+            setRefCheckResults({
+                totalResources: items.length,
+                validReferences: validReferences,
+                deletedReferences: Object.values(mergedDeletedRefs),
+                checkTime: new Date().toLocaleString('zh-CN')
+            });
+            setIsCheckingRef(false);
+            setIsRefCheckModalOpen(true);
+            addLog('资源引用检查', `检查了资源引用情况，发现 ${Object.keys(mergedDeletedRefs).length} 个被删除的引用`);
+        }, 1000);
     };
 
     // CRUD 操作
@@ -1320,6 +1428,9 @@ export default function ResourceManager() {
                     <div className="text-sm text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
                         Total: <span className="font-bold text-indigo-600">{items.length}</span>
                     </div>
+                    <button onClick={checkResourceReferences} disabled={isCheckingRef} className="p-2 text-slate-400 hover:text-amber-600 hover:bg-slate-100 rounded-full transition-colors disabled:opacity-50" title="检查资源引用">
+                        {isCheckingRef ? <Loader size={20} className="animate-spin" /> : <Link2 size={20} />}
+                    </button>
                     <button onClick={() => setShowLogs(!showLogs)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-100 rounded-full transition-colors" title="操作日志">
                         <History size={20} />
                     </button>
@@ -2363,6 +2474,130 @@ export default function ResourceManager() {
                                     关闭
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 资源引用检查模态框 */}
+            {isRefCheckModalOpen && refCheckResults && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[200] p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+                        {/* 头部 */}
+                        <div className="sticky top-0 bg-white border-b border-slate-200 px-8 py-6 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className={`p-3 rounded-xl ${refCheckResults.deletedReferences.length > 0 ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                                    <Link2 size={24} />
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-slate-900">资源引用检查</h2>
+                                    <p className="text-sm text-slate-500">{refCheckResults.checkTime}</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setIsRefCheckModalOpen(false)} className="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600">
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        {/* 内容 */}
+                        <div className="px-8 py-6">
+                            {/* 统计信息卡片 */}
+                            <div className="grid grid-cols-3 gap-4 mb-8">
+                                <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                                    <p className="text-sm text-slate-600 mb-2">后台资源总数</p>
+                                    <p className="text-3xl font-bold text-slate-900">{refCheckResults.totalResources}</p>
+                                </div>
+                                <div className="bg-emerald-50 rounded-xl p-6 border border-emerald-200">
+                                    <p className="text-sm text-emerald-700 mb-2">有效引用总数</p>
+                                    <p className="text-3xl font-bold text-emerald-600">{refCheckResults.validReferences.total}</p>
+                                </div>
+                                <div className={`rounded-xl p-6 border ${refCheckResults.deletedReferences.length > 0 ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200'}`}>
+                                    <p className={`text-sm mb-2 ${refCheckResults.deletedReferences.length > 0 ? 'text-red-700' : 'text-green-700'}`}>被删除的引用</p>
+                                    <p className={`text-3xl font-bold ${refCheckResults.deletedReferences.length > 0 ? 'text-red-600' : 'text-green-600'}`}>{refCheckResults.deletedReferences.length}</p>
+                                </div>
+                            </div>
+
+                            {/* 被删除的引用详情 */}
+                            {refCheckResults.deletedReferences.length > 0 && (
+                                <div className="mb-8">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <AlertTriangle size={20} className="text-red-600" />
+                                        <h3 className="text-lg font-bold text-slate-900">发现被删除的引用 ⚠️</h3>
+                                    </div>
+                                    <div className="space-y-4">
+                                        {refCheckResults.deletedReferences.map((ref, idx) => (
+                                            <div key={idx} className="bg-red-50 rounded-xl p-5 border-2 border-red-200">
+                                                <div className="flex items-start gap-3 mb-3">
+                                                    <div className="bg-red-200 rounded-full p-2 mt-1">
+                                                        <AlertTriangle size={16} className="text-red-700" />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <p className="font-mono text-sm font-bold text-red-700 mb-1">sourceKey: {ref.sourceKey}</p>
+                                                        <p className="text-sm text-slate-600">此 sourceKey 在后台数据库中已被删除，但以下配置仍在引用：</p>
+                                                    </div>
+                                                </div>
+                                                <div className="bg-white rounded-lg p-4 space-y-2">
+                                                    <div className="mb-2">
+                                                        <p className="text-xs font-semibold text-slate-700 uppercase mb-1">应用来源:</p>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {ref.sources.map((source, i) => (
+                                                                <span key={i} className="inline-block bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-medium">
+                                                                    {source}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs font-semibold text-slate-700 uppercase mb-1">使用详情:</p>
+                                                        <div className="space-y-1">
+                                                            {ref.usageDetails.map((detail, i) => (
+                                                                <div key={i} className="text-sm text-slate-700 bg-slate-50 rounded px-3 py-2 flex items-center justify-between">
+                                                                    <div>
+                                                                        <span className="font-medium">道具ID:</span> <span className="font-mono">{detail.itemId}</span>
+                                                                    </div>
+                                                                    <span className="text-xs text-slate-500">({detail.usageType})</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 检查通过提示 */}
+                            {refCheckResults.deletedReferences.length === 0 && (
+                                <div className="bg-emerald-50 rounded-xl p-6 border-2 border-emerald-200 flex items-center gap-4 mb-8">
+                                    <CheckCircle size={32} className="text-emerald-600" />
+                                    <div>
+                                        <p className="font-bold text-emerald-900">✓ 检查完成 - 无问题</p>
+                                        <p className="text-sm text-emerald-700">所有引用都有对应的后台资源，可以安全发布。</p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* 底部操作 */}
+                        <div className="sticky bottom-0 bg-white border-t border-slate-200 px-8 py-4 flex justify-end gap-3">
+                            <button
+                                onClick={() => {
+                                    const report = `资源引用检查报告\n检查时间: ${refCheckResults.checkTime}\n\n后台资源总数: ${refCheckResults.totalResources}\n有效引用: ${refCheckResults.validReferences.total}\n被删除的引用: ${refCheckResults.deletedReferences.length}\n\n被删除的引用详情:\n${refCheckResults.deletedReferences.map(ref => `sourceKey: ${ref.sourceKey}\n应用来源: ${ref.sources.join(', ')}`).join('\n\n')}`;
+                                    navigator.clipboard.writeText(report);
+                                    showNotification('已复制检查报告', 'success');
+                                }}
+                                className="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors flex items-center gap-2"
+                            >
+                                <Copy size={14} />
+                                复制报告
+                            </button>
+                            <button
+                                onClick={() => setIsRefCheckModalOpen(false)}
+                                className="px-6 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                            >
+                                关闭
+                            </button>
                         </div>
                     </div>
                 </div>
