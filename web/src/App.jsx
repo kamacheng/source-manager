@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-    Upload, Search, Trash2, Edit2, Save, X, Check, Image as ImageIcon,
+    Upload, Search, Ban, Edit2, Save, X, Check, Image as ImageIcon,
     Video, Music, FileAudio, Play, AlertCircle, FolderOpen, Film, Tag,
     Settings, Plus, MinusCircle, Clock, User, Calendar, Filter, History,
     Star, TrendingUp, Copy, CheckCircle, XCircle, Loader, ChevronDown, ChevronRight,
-    Link2, AlertTriangle
+    Link2, AlertTriangle, Archive, Navigation
 } from 'lucide-react';
 
 // --- 初始配置常量 ---
@@ -110,7 +110,7 @@ const generateImageUrl = (seed, colors) => `https://api.dicebear.com/7.x/shapes/
 
 const INITIAL_DATA = [
     // 武器图标 - 剑类
-    { id: 1, name: 'sword_fire_01', resourceKey: 'weapon_sword_fire_01', displayName: '火焰之剑图标', path: 'assets/images/sword_icons/sword_fire_01.png', physicalPath: 'uuid-abc123.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword1', 'ff6b6b'), uploadTime: '2026-01-15 10:30:00', uploader: 'admin', hasOptimized: true, width: 256, height: 256 },
+    { id: 1, name: 'sword_fire_01', resourceKey: 'weapon_sword_fire_01', displayName: '火焰之剑图标', path: 'assets/images/sword_icons/sword_fire_01.png', physicalPath: 'uuid-abc123.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword1', 'ff6b6b'), uploadTime: '2026-01-15 10:30:00', uploader: 'admin', hasOptimized: true, width: 256, height: 256, status: 'deprecated' },
     { id: 2, name: 'sword_ice_01', resourceKey: 'weapon_sword_ice_01', displayName: '寒冰之剑 蓝色主题', path: 'assets/images/sword_icons/sword_ice_01.png', physicalPath: 'uuid-def456.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword2', '4ecdc4'), uploadTime: '2026-01-16 14:20:00', uploader: 'editor1', hasOptimized: true, width: 256, height: 256 },
 
     // 武器图标 - 弓类
@@ -122,7 +122,7 @@ const INITIAL_DATA = [
 
     // 消耗品图标
     { id: 6, name: 'potion_hp_red', resourceKey: 'item_potion_hp_red', displayName: '红色生命药水', path: 'assets/images/consumable_icons/potion_hp_red.png', physicalPath: 'uuid-potion01.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion1', 'dc143c'), uploadTime: '2026-01-15 08:30:00', uploader: 'admin', hasOptimized: true, width: 128, height: 128 },
-    { id: 7, name: 'potion_mp_blue', resourceKey: 'item_potion_mp_blue', displayName: '蓝色魔力药水', path: 'assets/images/consumable_icons/potion_mp_blue.png', physicalPath: 'uuid-potion02.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion2', '4169e1'), uploadTime: '2026-01-15 08:35:00', uploader: 'admin', hasOptimized: true, width: 128, height: 128 },
+    { id: 7, name: 'potion_mp_blue', resourceKey: 'item_potion_mp_blue', displayName: '蓝色魔力药水', path: 'assets/images/consumable_icons/potion_mp_blue.png', physicalPath: 'uuid-potion02.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion2', '4169e1'), uploadTime: '2026-01-15 08:35:00', uploader: 'admin', hasOptimized: true, width: 128, height: 128, status: 'deprecated' },
     { id: 8, name: 'scroll_tp', resourceKey: 'item_scroll_teleport', displayName: '传送卷轴', path: 'assets/images/consumable_icons/scroll_tp.png', physicalPath: 'uuid-scroll01.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('scroll1', '9370db'), uploadTime: '2026-01-16 15:00:00', uploader: 'editor2', hasOptimized: false, width: 128, height: 128 },
 
     // 材料图标
@@ -162,15 +162,103 @@ const INITIAL_DATA = [
     { id: 28, name: 'bgm_main_theme', resourceKey: 'audio_bgm_main_theme', displayName: '主题背景音乐', path: 'assets/audio/main_bgm/theme.mp3', physicalPath: 'uuid-audio03.mp3', mediaType: 'audio', category: 'main_bgm', url: null, uploadTime: '2026-01-12 10:00:00', uploader: 'composer', hasOptimized: false },
     { id: 29, name: 'bgm_battle_epic', resourceKey: 'audio_bgm_battle_epic', displayName: '史诗战斗BGM', path: 'assets/audio/battle_bgm/epic.mp3', physicalPath: 'uuid-audio04.mp3', mediaType: 'audio', category: 'battle_bgm', url: null, uploadTime: '2026-01-13 09:00:00', uploader: 'composer', hasOptimized: false },
     { id: 30, name: 'voice_hero_knight_greeting', resourceKey: 'audio_voice_knight_greeting', displayName: '骑士问候语音', path: 'assets/audio/hero_voices/knight_greeting.mp3', physicalPath: 'uuid-audio05.mp3', mediaType: 'audio', category: 'hero_voice', url: null, uploadTime: '2026-01-15 14:00:00', uploader: 'voice_actor', hasOptimized: false },
+
+    // 更多武器图标 - 剑类
+    { id: 31, name: 'sword_thunder_01', resourceKey: 'weapon_sword_thunder_01', displayName: '雷霆之剑图标', path: 'assets/images/sword_icons/sword_thunder_01.png', physicalPath: 'uuid-sword03.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword3', 'ffeb3b'), uploadTime: '2026-01-17 11:30:00', uploader: 'admin', hasOptimized: true, width: 256, height: 256 },
+    { id: 32, name: 'sword_dark_01', resourceKey: 'weapon_sword_dark_01', displayName: '暗影之剑图标', path: 'assets/images/sword_icons/sword_dark_01.png', physicalPath: 'uuid-sword04.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword4', '424242'), uploadTime: '2026-01-17 12:00:00', uploader: 'editor1', hasOptimized: false, width: 256, height: 256 },
+    { id: 33, name: 'sword_holy_01', resourceKey: 'weapon_sword_holy_01', displayName: '圣光之剑图标', path: 'assets/images/sword_icons/sword_holy_01.png', physicalPath: 'uuid-sword05.png', mediaType: 'image', category: 'sword_icon', url: generateImageUrl('sword5', 'fff9c4'), uploadTime: '2026-01-18 09:00:00', uploader: 'editor2', hasOptimized: true, width: 256, height: 256 },
+
+    // 更多武器图标 - 弓类
+    { id: 34, name: 'bow_fire', resourceKey: 'weapon_bow_fire', displayName: '烈焰之弓', path: 'assets/images/bow_icons/bow_fire.png', physicalPath: 'uuid-bow002.png', mediaType: 'image', category: 'bow_icon', url: generateImageUrl('bow2', 'ff5722'), uploadTime: '2026-01-17 10:00:00', uploader: 'editor1', hasOptimized: true, width: 256, height: 256 },
+    { id: 35, name: 'bow_ice', resourceKey: 'weapon_bow_ice', displayName: '寒冰之弓', path: 'assets/images/bow_icons/bow_ice.png', physicalPath: 'uuid-bow003.png', mediaType: 'image', category: 'bow_icon', url: generateImageUrl('bow3', '00bcd4'), uploadTime: '2026-01-17 11:00:00', uploader: 'editor2', hasOptimized: false, width: 256, height: 256, status: 'deprecated' },
+    { id: 36, name: 'bow_shadow', resourceKey: 'weapon_bow_shadow', displayName: '暗影之弓', path: 'assets/images/bow_icons/bow_shadow.png', physicalPath: 'uuid-bow004.png', mediaType: 'image', category: 'bow_icon', url: generateImageUrl('bow4', '616161'), uploadTime: '2026-01-18 08:30:00', uploader: 'admin', hasOptimized: true, width: 256, height: 256 },
+
+    // 更多防具图标
+    { id: 37, name: 'armor_plate', resourceKey: 'armor_plate_steel', displayName: '钢铁板甲', path: 'assets/images/armor_icons/armor_plate.png', physicalPath: 'uuid-armor01.png', mediaType: 'image', category: 'armor_icon', url: generateImageUrl('armor1', '9e9e9e'), uploadTime: '2026-01-17 13:00:00', uploader: 'editor1', hasOptimized: true, width: 256, height: 256 },
+    { id: 38, name: 'boots_leather', resourceKey: 'armor_boots_leather', displayName: '皮革长靴', path: 'assets/images/armor_icons/boots_leather.png', physicalPath: 'uuid-armor02.png', mediaType: 'image', category: 'armor_icon', url: generateImageUrl('armor2', '795548'), uploadTime: '2026-01-17 14:00:00', uploader: 'editor2', hasOptimized: false, width: 256, height: 256 },
+    { id: 39, name: 'gloves_magic', resourceKey: 'armor_gloves_magic', displayName: '魔法手套', path: 'assets/images/armor_icons/gloves_magic.png', physicalPath: 'uuid-armor03.png', mediaType: 'image', category: 'armor_icon', url: generateImageUrl('armor3', '9c27b0'), uploadTime: '2026-01-18 10:00:00', uploader: 'admin', hasOptimized: true, width: 256, height: 256 },
+
+    // 更多消耗品图标
+    { id: 40, name: 'potion_stamina', resourceKey: 'item_potion_stamina', displayName: '耐力药水', path: 'assets/images/consumable_icons/potion_stamina.png', physicalPath: 'uuid-potion03.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion3', '4caf50'), uploadTime: '2026-01-17 09:00:00', uploader: 'admin', hasOptimized: true, width: 128, height: 128 },
+    { id: 41, name: 'elixir_strength', resourceKey: 'item_elixir_strength', displayName: '力量药剂', path: 'assets/images/consumable_icons/elixir_strength.png', physicalPath: 'uuid-potion04.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('potion4', 'ff9800'), uploadTime: '2026-01-17 10:00:00', uploader: 'editor1', hasOptimized: false, width: 128, height: 128 },
+    { id: 42, name: 'scroll_fireball', resourceKey: 'item_scroll_fireball', displayName: '火球卷轴', path: 'assets/images/consumable_icons/scroll_fireball.png', physicalPath: 'uuid-scroll02.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('scroll2', 'f44336'), uploadTime: '2026-01-18 11:00:00', uploader: 'editor2', hasOptimized: true, width: 128, height: 128 },
+    { id: 43, name: 'food_bread', resourceKey: 'item_food_bread', displayName: '面包', path: 'assets/images/consumable_icons/food_bread.png', physicalPath: 'uuid-food01.png', mediaType: 'image', category: 'consumable_icon', url: generateImageUrl('food1', 'ffb74d'), uploadTime: '2026-01-18 12:00:00', uploader: 'admin', hasOptimized: false, width: 128, height: 128 },
+
+    // 更多材料图标
+    { id: 44, name: 'ore_gold', resourceKey: 'material_ore_gold', displayName: '金矿石', path: 'assets/images/material_icons/ore_gold.png', physicalPath: 'uuid-ore02.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('ore2', 'ffd700'), uploadTime: '2026-01-17 15:00:00', uploader: 'admin', hasOptimized: true, width: 128, height: 128 },
+    { id: 45, name: 'ore_mithril', resourceKey: 'material_ore_mithril', displayName: '秘银矿石', path: 'assets/images/material_icons/ore_mithril.png', physicalPath: 'uuid-ore03.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('ore3', 'b0e0e6'), uploadTime: '2026-01-17 16:00:00', uploader: 'editor1', hasOptimized: false, width: 128, height: 128 },
+    { id: 46, name: 'gem_sapphire', resourceKey: 'material_gem_sapphire', displayName: '蓝宝石', path: 'assets/images/material_icons/gem_sapphire.png', physicalPath: 'uuid-gem02.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('gem2', '0d47a1'), uploadTime: '2026-01-18 09:00:00', uploader: 'editor2', hasOptimized: true, width: 128, height: 128 },
+    { id: 47, name: 'gem_emerald', resourceKey: 'material_gem_emerald', displayName: '绿宝石', path: 'assets/images/material_icons/gem_emerald.png', physicalPath: 'uuid-gem03.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('gem3', '00897b'), uploadTime: '2026-01-18 10:00:00', uploader: 'admin', hasOptimized: false, width: 128, height: 128 },
+    { id: 48, name: 'wood_oak', resourceKey: 'material_wood_oak', displayName: '橡木', path: 'assets/images/material_icons/wood_oak.png', physicalPath: 'uuid-wood01.png', mediaType: 'image', category: 'material_icon', url: generateImageUrl('wood1', '8d6e63'), uploadTime: '2026-01-18 11:00:00', uploader: 'editor1', hasOptimized: true, width: 128, height: 128, status: 'deprecated' },
+
+    // 更多英雄立绘
+    { id: 49, name: 'hero_warrior', resourceKey: 'char_hero_warrior', displayName: '战士布鲁克', path: 'assets/images/hero_portraits/warrior.png', physicalPath: 'uuid-warrior01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('warrior1', 'd32f2f'), uploadTime: '2026-01-16 10:00:00', uploader: 'artist1', hasOptimized: true, width: 512, height: 768 },
+    { id: 50, name: 'hero_priest', resourceKey: 'char_hero_priest', displayName: '牧师艾莉娜', path: 'assets/images/hero_portraits/priest.png', physicalPath: 'uuid-priest01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('priest1', 'ffeb3b'), uploadTime: '2026-01-16 11:00:00', uploader: 'artist2', hasOptimized: false, width: 512, height: 768 },
+    { id: 51, name: 'hero_assassin', resourceKey: 'char_hero_assassin', displayName: '刺客影', path: 'assets/images/hero_portraits/assassin.png', physicalPath: 'uuid-assassin01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('assassin1', '212121'), uploadTime: '2026-01-16 12:00:00', uploader: 'artist1', hasOptimized: true, width: 512, height: 768 },
+    { id: 52, name: 'hero_druid', resourceKey: 'char_hero_druid', displayName: '德鲁伊塞拉', path: 'assets/images/hero_portraits/druid.png', physicalPath: 'uuid-druid01.png', mediaType: 'image', category: 'hero_portrait', url: generateImageUrl('druid1', '66bb6a'), uploadTime: '2026-01-17 09:00:00', uploader: 'artist2', hasOptimized: false, width: 512, height: 768 },
+
+    // 更多NPC立绘
+    { id: 53, name: 'npc_blacksmith', resourceKey: 'char_npc_blacksmith', displayName: '铁匠老张', path: 'assets/images/npc_portraits/blacksmith.png', physicalPath: 'uuid-blacksmith01.png', mediaType: 'image', category: 'npc_portrait', url: generateImageUrl('blacksmith1', '8d6e63'), uploadTime: '2026-01-17 10:00:00', uploader: 'artist1', hasOptimized: true, width: 512, height: 768 },
+    { id: 54, name: 'npc_wizard', resourceKey: 'char_npc_wizard', displayName: '法师导师', path: 'assets/images/npc_portraits/wizard.png', physicalPath: 'uuid-wizard01.png', mediaType: 'image', category: 'npc_portrait', url: generateImageUrl('wizard1', '5e35b1'), uploadTime: '2026-01-17 11:00:00', uploader: 'artist2', hasOptimized: false, width: 512, height: 768 },
+    { id: 55, name: 'npc_guard', resourceKey: 'char_npc_guard', displayName: '城门守卫', path: 'assets/images/npc_portraits/guard.png', physicalPath: 'uuid-guard01.png', mediaType: 'image', category: 'npc_portrait', url: generateImageUrl('guard1', '546e7a'), uploadTime: '2026-01-17 12:00:00', uploader: 'artist1', hasOptimized: true, width: 512, height: 768, status: 'deprecated' },
+
+    // 敌人立绘
+    { id: 56, name: 'enemy_goblin', resourceKey: 'char_enemy_goblin', displayName: '哥布林', path: 'assets/images/enemy_portraits/goblin.png', physicalPath: 'uuid-goblin01.png', mediaType: 'image', category: 'enemy_portrait', url: generateImageUrl('goblin1', '689f38'), uploadTime: '2026-01-17 13:00:00', uploader: 'artist2', hasOptimized: true, width: 512, height: 768 },
+    { id: 57, name: 'enemy_orc', resourceKey: 'char_enemy_orc', displayName: '兽人', path: 'assets/images/enemy_portraits/orc.png', physicalPath: 'uuid-orc01.png', mediaType: 'image', category: 'enemy_portrait', url: generateImageUrl('orc1', '558b2f'), uploadTime: '2026-01-17 14:00:00', uploader: 'artist1', hasOptimized: false, width: 512, height: 768 },
+    { id: 58, name: 'enemy_dragon', resourceKey: 'char_enemy_dragon', displayName: '红龙', path: 'assets/images/enemy_portraits/dragon.png', physicalPath: 'uuid-dragon01.png', mediaType: 'image', category: 'enemy_portrait', url: generateImageUrl('dragon1', 'c62828'), uploadTime: '2026-01-17 15:00:00', uploader: 'artist2', hasOptimized: true, width: 512, height: 768 },
+
+    // 更多公告图片
+    { id: 59, name: 'event_summer', resourceKey: 'announce_summer_event', displayName: '夏日活动公告', path: 'assets/images/event_announce/summer.png', physicalPath: 'uuid-announce04.png', mediaType: 'image', category: 'event_announce', url: generateImageUrl('announce4', '00bcd4'), uploadTime: '2026-01-19 09:00:00', uploader: 'admin', hasOptimized: true, width: 1920, height: 1080 },
+    { id: 60, name: 'event_halloween', resourceKey: 'announce_halloween', displayName: '万圣节活动公告', path: 'assets/images/event_announce/halloween.png', physicalPath: 'uuid-announce05.png', mediaType: 'image', category: 'event_announce', url: generateImageUrl('announce5', 'ff6f00'), uploadTime: '2026-01-19 10:00:00', uploader: 'admin', hasOptimized: false, width: 1920, height: 1080 },
+    { id: 61, name: 'system_update', resourceKey: 'announce_system_update', displayName: '系统更新通知', path: 'assets/images/system_announce/update.png', physicalPath: 'uuid-announce06.png', mediaType: 'image', category: 'system_announce', url: generateImageUrl('announce6', '2196f3'), uploadTime: '2026-01-19 11:00:00', uploader: 'admin', hasOptimized: true, width: 1920, height: 1080 },
+
+    // 更多UI素材
+    { id: 62, name: 'btn_start', resourceKey: 'ui_button_start', displayName: '开始按钮', path: 'assets/images/buttons/start.png', physicalPath: 'uuid-btn03.png', mediaType: 'image', category: 'button_ui', url: generateImageUrl('btn3', '4caf50'), uploadTime: '2026-01-16 14:00:00', uploader: 'ui_designer', hasOptimized: true, width: 200, height: 80 },
+    { id: 63, name: 'btn_settings', resourceKey: 'ui_button_settings', displayName: '设置按钮', path: 'assets/images/buttons/settings.png', physicalPath: 'uuid-btn04.png', mediaType: 'image', category: 'button_ui', url: generateImageUrl('btn4', '607d8b'), uploadTime: '2026-01-16 15:00:00', uploader: 'ui_designer', hasOptimized: false, width: 200, height: 80 },
+    { id: 64, name: 'panel_shop', resourceKey: 'ui_panel_shop', displayName: '商店面板', path: 'assets/images/panels/shop.png', physicalPath: 'uuid-panel02.png', mediaType: 'image', category: 'panel_ui', url: generateImageUrl('panel2', 'ff9800'), uploadTime: '2026-01-16 16:00:00', uploader: 'ui_designer', hasOptimized: true, width: 800, height: 600 },
+    { id: 65, name: 'panel_quest', resourceKey: 'ui_panel_quest', displayName: '任务面板', path: 'assets/images/panels/quest.png', physicalPath: 'uuid-panel03.png', mediaType: 'image', category: 'panel_ui', url: generateImageUrl('panel3', '9c27b0'), uploadTime: '2026-01-16 17:00:00', uploader: 'ui_designer', hasOptimized: false, width: 800, height: 600 },
+    { id: 66, name: 'icon_coin', resourceKey: 'ui_icon_coin', displayName: '金币图标', path: 'assets/images/ui_icons/coin.png', physicalPath: 'uuid-icon01.png', mediaType: 'image', category: 'icon_ui', url: generateImageUrl('icon1', 'ffd700'), uploadTime: '2026-01-17 08:00:00', uploader: 'ui_designer', hasOptimized: true, width: 64, height: 64 },
+    { id: 67, name: 'icon_diamond', resourceKey: 'ui_icon_diamond', displayName: '钻石图标', path: 'assets/images/ui_icons/diamond.png', physicalPath: 'uuid-icon02.png', mediaType: 'image', category: 'icon_ui', url: generateImageUrl('icon2', '00bcd4'), uploadTime: '2026-01-17 09:00:00', uploader: 'ui_designer', hasOptimized: false, width: 64, height: 64 },
+
+    // 更多背景图
+    { id: 68, name: 'bg_desert', resourceKey: 'bg_scene_desert', displayName: '沙漠场景背景', path: 'assets/images/scene_bg/desert.png', physicalPath: 'uuid-bg03.png', mediaType: 'image', category: 'scene_bg', url: generateImageUrl('bg3', 'ffb74d'), uploadTime: '2026-01-14 10:00:00', uploader: 'bg_artist', hasOptimized: true, width: 2560, height: 1440 },
+    { id: 69, name: 'bg_snow', resourceKey: 'bg_scene_snow', displayName: '雪地场景背景', path: 'assets/images/scene_bg/snow.png', physicalPath: 'uuid-bg04.png', mediaType: 'image', category: 'scene_bg', url: generateImageUrl('bg4', 'e3f2fd'), uploadTime: '2026-01-14 11:00:00', uploader: 'bg_artist', hasOptimized: false, width: 2560, height: 1440 },
+    { id: 70, name: 'bg_battle_arena', resourceKey: 'bg_battle_arena', displayName: '竞技场战斗背景', path: 'assets/images/battle_bg/arena.png', physicalPath: 'uuid-bg05.png', mediaType: 'image', category: 'battle_bg', url: generateImageUrl('bg5', '8d6e63'), uploadTime: '2026-01-14 12:00:00', uploader: 'bg_artist', hasOptimized: true, width: 2560, height: 1440 },
+    { id: 71, name: 'bg_battle_dungeon', resourceKey: 'bg_battle_dungeon', displayName: '地下城战斗背景', path: 'assets/images/battle_bg/dungeon.png', physicalPath: 'uuid-bg06.png', mediaType: 'image', category: 'battle_bg', url: generateImageUrl('bg6', '424242'), uploadTime: '2026-01-14 13:00:00', uploader: 'bg_artist', hasOptimized: false, width: 2560, height: 1440 },
+
+    // 更多视频资源
+    { id: 72, name: 'login_seasonal', resourceKey: 'video_login_seasonal', displayName: '季节性登录动画', path: 'assets/videos/login_seasonal/anim.mp4', physicalPath: 'uuid-video04.mp4', mediaType: 'video', category: 'login_seasonal', url: null, uploadTime: '2026-01-13 15:00:00', uploader: 'video_editor', hasOptimized: false, videoWidth: 1920, videoHeight: 1080, duration: 50 },
+    { id: 73, name: 'cutscene_chapter2', resourceKey: 'video_story_chapter2', displayName: '第二章剧情动画', path: 'assets/videos/story/chapter2.mp4', physicalPath: 'uuid-video05.mp4', mediaType: 'video', category: 'story_cutscene', url: null, uploadTime: '2026-01-11 14:00:00', uploader: 'video_editor', hasOptimized: false, videoWidth: 1920, videoHeight: 1080, duration: 135, status: 'deprecated' },
+    { id: 74, name: 'cutscene_boss', resourceKey: 'video_battle_boss', displayName: 'BOSS战斗过场', path: 'assets/videos/battle/boss.mp4', physicalPath: 'uuid-video06.mp4', mediaType: 'video', category: 'battle_cutscene', url: null, uploadTime: '2026-01-12 10:00:00', uploader: 'video_editor', hasOptimized: false, videoWidth: 1920, videoHeight: 1080, duration: 30 },
+    { id: 75, name: 'skill_icestorm', resourceKey: 'video_skill_icestorm', displayName: '冰风暴技能动画', path: 'assets/videos/skill_videos/icestorm.mp4', physicalPath: 'uuid-video07.mp4', mediaType: 'video', category: 'skill_video', url: null, uploadTime: '2026-01-12 11:00:00', uploader: 'fx_artist', hasOptimized: false, videoWidth: 1280, videoHeight: 720, duration: 10 },
+    { id: 76, name: 'skill_lightning', resourceKey: 'video_skill_lightning', displayName: '闪电链技能动画', path: 'assets/videos/skill_videos/lightning.mp4', physicalPath: 'uuid-video08.mp4', mediaType: 'video', category: 'skill_video', url: null, uploadTime: '2026-01-12 12:00:00', uploader: 'fx_artist', hasOptimized: false, videoWidth: 1280, videoHeight: 720, duration: 7 },
+    { id: 77, name: 'ultimate_meteor', resourceKey: 'video_ultimate_meteor', displayName: '流星雨大招动画', path: 'assets/videos/ultimate_videos/meteor.mp4', physicalPath: 'uuid-video09.mp4', mediaType: 'video', category: 'ultimate_video', url: null, uploadTime: '2026-01-12 13:00:00', uploader: 'fx_artist', hasOptimized: false, videoWidth: 1280, videoHeight: 720, duration: 15 },
+
+    // 更多音频资源
+    { id: 78, name: 'sfx_click_02', resourceKey: 'audio_sfx_click_02', displayName: '点击音效2', path: 'assets/audio/click_sfx/click_02.mp3', physicalPath: 'uuid-audio06.mp3', mediaType: 'audio', category: 'click_sfx', url: null, uploadTime: '2026-01-15 16:00:00', uploader: 'sound_designer', hasOptimized: false },
+    { id: 79, name: 'sfx_notify_error', resourceKey: 'audio_sfx_notify_error', displayName: '错误提示音', path: 'assets/audio/notify_sfx/error.mp3', physicalPath: 'uuid-audio07.mp3', mediaType: 'audio', category: 'notify_sfx', url: null, uploadTime: '2026-01-15 16:30:00', uploader: 'sound_designer', hasOptimized: false },
+    { id: 80, name: 'sfx_notify_warning', resourceKey: 'audio_sfx_notify_warning', displayName: '警告提示音', path: 'assets/audio/notify_sfx/warning.mp3', physicalPath: 'uuid-audio08.mp3', mediaType: 'audio', category: 'notify_sfx', url: null, uploadTime: '2026-01-15 17:00:00', uploader: 'sound_designer', hasOptimized: false },
+    { id: 81, name: 'bgm_story', resourceKey: 'audio_bgm_story', displayName: '剧情背景音乐', path: 'assets/audio/story_bgm/story.mp3', physicalPath: 'uuid-audio09.mp3', mediaType: 'audio', category: 'story_bgm', url: null, uploadTime: '2026-01-13 10:00:00', uploader: 'composer', hasOptimized: false },
+    { id: 82, name: 'bgm_shop', resourceKey: 'audio_bgm_shop', displayName: '商店BGM', path: 'assets/audio/main_bgm/shop.mp3', physicalPath: 'uuid-audio10.mp3', mediaType: 'audio', category: 'main_bgm', url: null, uploadTime: '2026-01-13 11:00:00', uploader: 'composer', hasOptimized: false, status: 'deprecated' },
+    { id: 83, name: 'voice_hero_mage', resourceKey: 'audio_voice_mage_greeting', displayName: '法师问候语音', path: 'assets/audio/hero_voices/mage_greeting.mp3', physicalPath: 'uuid-audio11.mp3', mediaType: 'audio', category: 'hero_voice', url: null, uploadTime: '2026-01-16 14:00:00', uploader: 'voice_actor', hasOptimized: false },
+    { id: 84, name: 'voice_hero_archer', resourceKey: 'audio_voice_archer_greeting', displayName: '弓箭手问候语音', path: 'assets/audio/hero_voices/archer_greeting.mp3', physicalPath: 'uuid-audio12.mp3', mediaType: 'audio', category: 'hero_voice', url: null, uploadTime: '2026-01-16 15:00:00', uploader: 'voice_actor', hasOptimized: false },
+    { id: 85, name: 'voice_npc_merchant', resourceKey: 'audio_voice_merchant', displayName: '商人NPC语音', path: 'assets/audio/npc_voices/merchant.mp3', physicalPath: 'uuid-audio13.mp3', mediaType: 'audio', category: 'npc_voice', url: null, uploadTime: '2026-01-16 16:00:00', uploader: 'voice_actor', hasOptimized: false },
 ];
 
 export default function ResourceManager() {
-    const [items, setItems] = useState(INITIAL_DATA);
+    // 为初始数据添加status字段（如果没有的话）
+    const initializedData = INITIAL_DATA.map(item => ({
+        ...item,
+        status: item.status || 'normal'
+    }));
+
+    const [items, setItems] = useState(initializedData);
     const [categoryConfig, setCategoryConfig] = useState(DEFAULT_CATEGORY_CONFIG);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterMediaType, setFilterMediaType] = useState('all');
     const [filterCategory, setFilterCategory] = useState('all');
     const [filterOptimized, setFilterOptimized] = useState('all');
+    const [filterStatus, setFilterStatus] = useState('all');
     const [filterDateRange, setFilterDateRange] = useState({ start: '', end: '' });
 
     // 搜索历史与收藏
@@ -219,6 +307,15 @@ export default function ResourceManager() {
     const [isRefCheckModalOpen, setIsRefCheckModalOpen] = useState(false);
     const [refCheckResults, setRefCheckResults] = useState(null);
     const [isCheckingRef, setIsCheckingRef] = useState(false);
+
+    // 资源跳转
+    const [isJumpModalOpen, setIsJumpModalOpen] = useState(false);
+    const [jumpResourceKey, setJumpResourceKey] = useState('');
+    const [jumpSearchResults, setJumpSearchResults] = useState([]);
+
+    // 分页
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(50);
 
     const showNotification = (message, type = 'success') => {
         setNotification({ message, type });
@@ -378,13 +475,99 @@ export default function ResourceManager() {
         }, 1000);
     };
 
+    // 资源跳转功能
+    const handleJumpSearch = () => {
+        if (!jumpResourceKey.trim()) {
+            showNotification('请输入资源Key', 'error');
+            return;
+        }
+
+        const searchKey = jumpResourceKey.trim().toLowerCase();
+        const results = items.filter(item =>
+            item.resourceKey.toLowerCase().includes(searchKey) ||
+            item.name.toLowerCase().includes(searchKey) ||
+            (item.displayName && item.displayName.toLowerCase().includes(searchKey))
+        );
+
+        setJumpSearchResults(results);
+
+        if (results.length === 0) {
+            showNotification('未找到匹配的资源', 'error');
+        } else if (results.length === 1) {
+            // 只有一个结果，直接跳转
+            handleJumpToResource(results[0]);
+        } else {
+            // 多个结果，显示列表让用户选择
+            showNotification(`找到 ${results.length} 个匹配的资源`, 'success');
+        }
+    };
+
+    const handleJumpToResource = (resource) => {
+        // 根据资源状态判断跳转逻辑
+        if (resource.status === 'deprecated') {
+            // 弃用资源：跳转到弃用区
+            setFilterMediaType(resource.mediaType);
+            setFilterCategory('all');
+            setFilterStatus('deprecated');
+            showNotification(`已定位到弃用资源: ${resource.resourceKey}`, 'success');
+        } else {
+            // 正常资源：跳转到对应分类
+            setFilterMediaType(resource.mediaType);
+            setFilterCategory(resource.category);
+            setFilterStatus('all');
+
+            // 展开分类树
+            const expandCategory = (categoryId) => {
+                setExpandedCategories(prev => ({ ...prev, [categoryId]: true }));
+                // 递归展开父分类
+                const config = categoryConfig[resource.mediaType] || [];
+                for (const parent of config) {
+                    if (parent.children) {
+                        for (const child of parent.children) {
+                            if (child.id === categoryId) {
+                                setExpandedCategories(prev => ({
+                                    ...prev,
+                                    [parent.id]: true,
+                                    [resource.mediaType]: true
+                                }));
+                            }
+                        }
+                    }
+                }
+            };
+
+            expandCategory(resource.category);
+            showNotification(`已定位到资源: ${resource.resourceKey}`, 'success');
+        }
+
+        // 关闭跳转弹窗
+        setIsJumpModalOpen(false);
+        setJumpResourceKey('');
+        setJumpSearchResults([]);
+
+        // 可选：高亮显示目标资源
+        addLog('资源跳转', `跳转到资源: ${resource.resourceKey}`);
+    };
+
     // CRUD 操作
-    const handleDelete = (id) => {
-        if (window.confirm('确定要删除该资源吗？')) {
-            const item = items.find(i => i.id === id);
-            setItems(items.filter(item => item.id !== id));
-            addLog('删除资源', `删除了资源: ${item.name}`);
-            showNotification('资源删除成功', 'success');
+    const handleDeprecate = (id) => {
+        const item = items.find(i => i.id === id);
+        if (window.confirm('确定要将该资源标记为弃用吗？弃用后资源将被移至"弃用资源"区，无法被后台其他地方引用')) {
+            // 这里应该检查资源是否有引用，实际项目中需要后端API支持
+            // 模拟检查引用
+            const hasReferences = false; // 实际应查询数据库
+
+            if (hasReferences) {
+                showNotification('资源使用中，无法标记为弃用，请先解除关联关系', 'error');
+                return;
+            }
+
+            setItems(items.map(i =>
+                i.id === id ? { ...i, status: 'deprecated' } : i
+            ));
+            addLog('标记为弃用', `将资源标记为弃用: ${item.name}`);
+            addChangeHistory(id, '标记为弃用', '资源被标记为弃用状态');
+            showNotification('资源已标记为弃用', 'success');
         }
     };
 
@@ -917,7 +1100,7 @@ export default function ResourceManager() {
     const handleQuickAddCategory = (type, parentId = null) => {
         // 如果要在某个节点下添加子分类，检查该节点是否有资源
         if (parentId) {
-            const resourceCount = items.filter(item => item.category === parentId).length;
+            const resourceCount = items.filter(item => item.mediaType === type && item.category === parentId && item.status !== 'deprecated').length;
             if (resourceCount > 0) {
                 showNotification(
                     `该分类下有 ${resourceCount} 个资源，请先将资源迁移到其他分类后再添加子分类`,
@@ -940,10 +1123,16 @@ export default function ResourceManager() {
     };
 
     const toggleSelectAll = () => {
-        if (selectedItems.length === sortedItems.length) {
-            setSelectedItems([]);
+        const currentItems = currentView === 'uploaded' ? paginatedUploadedItems : paginatedBuiltinItems;
+        const currentItemIds = currentItems.map(item => item.id);
+        const allCurrentSelected = currentItemIds.every(id => selectedItems.includes(id));
+
+        if (allCurrentSelected && currentItems.length > 0) {
+            // 取消选择当前页的所有项目
+            setSelectedItems(prev => prev.filter(id => !currentItemIds.includes(id)));
         } else {
-            setSelectedItems(sortedItems.map(item => item.id));
+            // 选择当前页的所有项目
+            setSelectedItems(prev => [...new Set([...prev, ...currentItemIds])]);
         }
     };
 
@@ -958,6 +1147,14 @@ export default function ResourceManager() {
             return;
         }
         const selectedResources = items.filter(item => selectedItems.includes(item.id));
+
+        // 检查是否有弃用资源
+        const hasDeprecated = selectedResources.some(item => item.status === 'deprecated');
+        if (hasDeprecated) {
+            showNotification('弃用资源区不支持迁移功能', 'error');
+            return;
+        }
+
         const mediaType = selectedResources[0].mediaType;
         const allSameType = selectedResources.every(item => item.mediaType === mediaType);
 
@@ -1010,7 +1207,7 @@ export default function ResourceManager() {
         const hasChildren = category.children && category.children.length > 0;
         const isEditing = editingCategory?.id === category.id;
         const isAddingChild = managingSubCategoryFor === category.id;
-        const resourceCount = items.filter(item => item.category === category.id).length;
+        const resourceCount = items.filter(item => item.mediaType === type && item.category === category.id && item.status !== 'deprecated').length;
 
         // 键盘快捷键处理
         const handleKeyDown = (e) => {
@@ -1224,12 +1421,31 @@ export default function ResourceManager() {
             (filterOptimized === 'optimized' && item.hasOptimized) ||
             (filterOptimized === 'not_optimized' && !item.hasOptimized);
 
-        return matchesSearch && matchesType && matchesCategory && matchesOptimized;
+        // 资源状态筛选（重要：弃用资源只在明确选择"弃用"状态时显示）
+        let matchesStatus;
+        if (filterStatus === 'deprecated') {
+            // 只显示弃用资源
+            matchesStatus = item.status === 'deprecated';
+        } else if (filterStatus === 'normal') {
+            // 只显示正常资源
+            matchesStatus = item.status === 'normal' || !item.status;
+        } else {
+            // filterStatus === 'all' 时，只显示正常资源（弃用资源需要明确筛选）
+            matchesStatus = item.status !== 'deprecated';
+        }
+
+        return matchesSearch && matchesType && matchesCategory && matchesOptimized && matchesStatus;
     });
 
-    // 搜索排序（精确匹配优先）
+    // 搜索排序（精确匹配优先）+ 按更新时间排序
     const sortedItems = [...filteredItems].sort((a, b) => {
-        if (!searchTerm) return 0;
+        if (!searchTerm) {
+            // 没有搜索词时，按上传时间排序（最新的在前）
+            const timeA = new Date(a.uploadTime).getTime();
+            const timeB = new Date(b.uploadTime).getTime();
+            return timeB - timeA;
+        }
+
         const searchLower = searchTerm.toLowerCase();
 
         // resourceKey精确匹配
@@ -1244,12 +1460,29 @@ export default function ResourceManager() {
         if (aExactDisplay && !bExactDisplay) return -1;
         if (!aExactDisplay && bExactDisplay) return 1;
 
-        return 0;
+        // 搜索时也按时间排序
+        const timeA = new Date(a.uploadTime).getTime();
+        const timeB = new Date(b.uploadTime).getTime();
+        return timeB - timeA;
     });
 
     // 按照来源分组资源
     const uploadedItems = sortedItems.filter(item => !isResourceFromLocal(item.resourceKey));
     const builtinItems = sortedItems.filter(item => isResourceFromLocal(item.resourceKey));
+
+    // 分页处理
+    const totalItems = currentView === 'uploaded' ? uploadedItems.length : builtinItems.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const paginatedUploadedItems = uploadedItems.slice(startIndex, endIndex);
+    const paginatedBuiltinItems = builtinItems.slice(startIndex, endIndex);
+
+    // 当筛选条件变化时重置到第一页
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filterMediaType, filterCategory, filterOptimized, filterStatus, searchTerm, currentView]);
 
     // 计算分类下的资源数量（包括所有子孙分类）
     const getCategoryItemCount = (mediaType, categoryId) => {
@@ -1268,7 +1501,11 @@ export default function ResourceManager() {
         };
 
         const descendantIds = getAllDescendantIds(category);
-        return items.filter(item => descendantIds.includes(item.category)).length;
+        return items.filter(item =>
+            item.mediaType === mediaType &&
+            descendantIds.includes(item.category) &&
+            item.status !== 'deprecated'
+        ).length;
     };
 
     // 递归渲染分类树节点
@@ -1295,13 +1532,14 @@ export default function ResourceManager() {
                         onClick={() => {
                             setFilterMediaType(mediaType);
                             setFilterCategory(category.id);
+                            setFilterStatus('all');
                             addRecentCategory(category.id);
                             // 如果有子节点，自动展开
                             if (hasChildren && !isCatExpanded) {
                                 setExpandedCategories(prev => ({ ...prev, [category.id]: true }));
                             }
                         }}
-                        className={`flex-1 flex items-center justify-between px-2 py-1.5 rounded text-xs transition-all text-left ${isSelected
+                        className={`flex-1 flex items-center justify-between px-2 py-1.5 rounded text-xs transition-all text-left ${isSelected && filterStatus !== 'deprecated'
                             ? (isLeaf ? 'bg-indigo-600 text-white font-medium' : 'bg-indigo-50 text-indigo-600 font-medium')
                             : 'text-slate-600 hover:bg-slate-50'
                             }`}
@@ -1428,6 +1666,9 @@ export default function ResourceManager() {
                     <div className="text-sm text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
                         Total: <span className="font-bold text-indigo-600">{items.length}</span>
                     </div>
+                    <button onClick={() => setIsJumpModalOpen(true)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-colors" title="快速跳转到资源">
+                        <Navigation size={20} />
+                    </button>
                     <button onClick={checkResourceReferences} disabled={isCheckingRef} className="p-2 text-slate-400 hover:text-amber-600 hover:bg-slate-100 rounded-full transition-colors disabled:opacity-50" title="检查资源引用">
                         {isCheckingRef ? <Loader size={20} className="animate-spin" /> : <Link2 size={20} />}
                     </button>
@@ -1466,13 +1707,13 @@ export default function ResourceManager() {
                                 <h2 className="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3 px-2">资源分类</h2>
 
                                 {/* 全部资源 */}
-                                <button onClick={() => { setFilterMediaType('all'); setFilterCategory('all'); }}
-                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left mb-3 ${filterMediaType === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-700 hover:bg-slate-100'}`}>
+                                <button onClick={() => { setFilterMediaType('all'); setFilterCategory('all'); setFilterStatus('all'); }}
+                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left mb-3 ${filterMediaType === 'all' && filterStatus !== 'deprecated' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-700 hover:bg-slate-100'}`}>
                                     <div className="flex items-center gap-2">
                                         <FolderOpen size={16} />
                                         <span>全部资源</span>
                                     </div>
-                                    <span className={`text-xs px-2 py-0.5 rounded-full ${filterMediaType === 'all' ? 'bg-indigo-500' : 'bg-slate-200'}`}>{items.length}</span>
+                                    <span className={`text-xs px-2 py-0.5 rounded-full ${filterMediaType === 'all' ? 'bg-indigo-500' : 'bg-slate-200'}`}>{items.filter(item => item.status !== 'deprecated').length}</span>
                                 </button>
 
                                 <div className="border-t border-slate-200 pt-3 mb-3"></div>
@@ -1483,7 +1724,7 @@ export default function ResourceManager() {
                                     { id: 'video', label: '视频资源', icon: Video },
                                     { id: 'audio', label: '音频资源', icon: Music },
                                 ].map(type => {
-                                    const typeCount = items.filter(item => item.mediaType === type.id).length;
+                                    const typeCount = items.filter(item => item.mediaType === type.id && item.status !== 'deprecated').length;
                                     const isExpanded = expandedCategories[type.id];
                                     const hasCategories = categoryConfig[type.id] && categoryConfig[type.id].length > 0;
 
@@ -1503,13 +1744,14 @@ export default function ResourceManager() {
                                                     onClick={() => {
                                                         setFilterMediaType(type.id);
                                                         setFilterCategory('all');
+                                                        setFilterStatus('all');
                                                         addRecentCategory(type.id);
                                                         // 自动展开
                                                         if (hasCategories && !isExpanded) {
                                                             setExpandedCategories(prev => ({ ...prev, [type.id]: true }));
                                                         }
                                                     }}
-                                                    className={`flex-1 flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all text-left ${filterMediaType === type.id && filterCategory === 'all' ? 'bg-indigo-100 text-indigo-700' : 'text-slate-700 hover:bg-slate-50'}`}
+                                                    className={`flex-1 flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all text-left ${filterMediaType === type.id && filterCategory === 'all' && filterStatus !== 'deprecated' ? 'bg-indigo-100 text-indigo-700' : 'text-slate-700 hover:bg-slate-50'}`}
                                                 >
                                                     <div className="flex items-center gap-2">
                                                         <type.icon size={16} />
@@ -1529,6 +1771,42 @@ export default function ResourceManager() {
                                     );
                                 })}
 
+                                {/* 弃用资源放置区 */}
+                                <div className="mt-6 pt-3 border-t-2 border-orange-200">
+                                    <h3 className="text-xs font-bold text-orange-600 uppercase mb-2 px-2 flex items-center gap-1">
+                                        <Archive size={14} /> 弃用资源
+                                    </h3>
+                                    {[
+                                        { id: 'image', label: '图片资源', icon: ImageIcon },
+                                        { id: 'video', label: '视频资源', icon: Video },
+                                        { id: 'audio', label: '音频资源', icon: Music },
+                                    ].map(type => {
+                                        const deprecatedCount = items.filter(item => item.mediaType === type.id && item.status === 'deprecated').length;
+                                        if (deprecatedCount === 0) return null;
+
+                                        return (
+                                            <button
+                                                key={`deprecated_${type.id}`}
+                                                onClick={() => {
+                                                    setFilterMediaType(type.id);
+                                                    setFilterCategory('all');
+                                                    setFilterStatus('deprecated');
+                                                }}
+                                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-all text-left mb-1 ${filterMediaType === type.id && filterStatus === 'deprecated' ? 'bg-orange-100 text-orange-700' : 'text-slate-600 hover:bg-orange-50'}`}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <type.icon size={14} />
+                                                    <span className="text-xs">{type.label}</span>
+                                                </div>
+                                                <span className="text-xs bg-orange-200 text-orange-700 px-2 py-0.5 rounded-full">{deprecatedCount}</span>
+                                            </button>
+                                        );
+                                    })}
+                                    <p className="text-[10px] text-slate-500 px-2 mt-2">
+                                        弃用资源不支持修改分类和迁移功能
+                                    </p>
+                                </div>
+
                                 {/* 收藏分类 */}
                                 {favoriteCategories.length > 0 && (
                                     <div className="mt-6 pt-3 border-t border-slate-200">
@@ -1542,7 +1820,7 @@ export default function ResourceManager() {
                                                 return (
                                                     <button
                                                         key={catId}
-                                                        onClick={() => { setFilterCategory(catId); addRecentCategory(catId); }}
+                                                        onClick={() => { setFilterCategory(catId); setFilterStatus('all'); addRecentCategory(catId); }}
                                                         className="w-full text-left px-2 py-1.5 text-xs text-slate-600 hover:bg-amber-50 hover:text-amber-700 rounded transition-colors flex items-center gap-1.5"
                                                     >
                                                         <Star size={10} fill="currentColor" className="text-yellow-400" />
@@ -1643,13 +1921,13 @@ export default function ResourceManager() {
                         {/* 面包屑导航 */}
                         <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-3 mb-3">
                             <div className="flex items-center gap-2 text-sm flex-wrap">
-                                <button onClick={() => { setFilterMediaType('all'); setFilterCategory('all'); }} className="text-slate-500 hover:text-indigo-600 transition-colors">
+                                <button onClick={() => { setFilterMediaType('all'); setFilterCategory('all'); setFilterStatus('all'); }} className="text-slate-500 hover:text-indigo-600 transition-colors">
                                     <FolderOpen size={14} className="inline" /> 全部资源
                                 </button>
                                 {filterMediaType !== 'all' && (
                                     <>
                                         <span className="text-slate-300">/</span>
-                                        <button onClick={() => { setFilterCategory('all'); }} className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">
+                                        <button onClick={() => { setFilterCategory('all'); setFilterStatus('all'); }} className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">
                                             {filterMediaType === 'image' ? '图片资源' : filterMediaType === 'video' ? '视频资源' : '音频资源'}
                                         </button>
                                     </>
@@ -1706,22 +1984,39 @@ export default function ResourceManager() {
 
                             <div className="flex items-center justify-between mb-4">
                                 <p className="text-sm text-slate-500 font-medium">
-                                    共 <span className="text-indigo-600 font-bold">{sortedItems.length}</span> 个资源
+                                    共 <span className="text-indigo-600 font-bold">{currentView === 'uploaded' ? uploadedItems.length : builtinItems.length}</span> 个资源
+                                    {totalPages > 1 && (
+                                        <span className="text-slate-400 ml-2">
+                                            · 第 {currentPage}/{totalPages} 页
+                                        </span>
+                                    )}
                                 </p>
                                 <button
                                     onClick={toggleSelectAll}
                                     className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1"
                                 >
                                     <CheckCircle size={14} />
-                                    {selectedItems.length === sortedItems.length && sortedItems.length > 0 ? '取消全选' : '全选'}
+                                    {(() => {
+                                        const currentItems = currentView === 'uploaded' ? paginatedUploadedItems : paginatedBuiltinItems;
+                                        const currentItemIds = currentItems.map(item => item.id);
+                                        const allCurrentSelected = currentItemIds.every(id => selectedItems.includes(id));
+                                        return allCurrentSelected && currentItems.length > 0 ? '取消全选（本页）' : '全选（本页）';
+                                    })()}
                                 </button>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                {sortedItems.map(item => (
-                                    <div key={item.id} className="group bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-lg hover:border-indigo-300 transition-all duration-300 relative">
+                                {(currentView === 'uploaded' ? paginatedUploadedItems : paginatedBuiltinItems).map(item => (
+                                    <div key={item.id} className={`group bg-white rounded-lg border overflow-hidden hover:shadow-lg transition-all duration-300 relative ${item.status === 'deprecated' ? 'border-orange-300 opacity-75' : 'border-slate-200 hover:border-indigo-300'}`}>
+                                        {/* 弃用状态标识 */}
+                                        {item.status === 'deprecated' && (
+                                            <div className="absolute top-0 left-0 right-0 bg-orange-500 text-white text-[10px] font-bold text-center py-1 z-40 flex items-center justify-center gap-1">
+                                                <Archive size={12} /> 已弃用
+                                            </div>
+                                        )}
+
                                         {/* 复选框 */}
-                                        <div className="absolute top-2 left-2 z-30">
+                                        <div className={`absolute ${item.status === 'deprecated' ? 'top-8' : 'top-2'} left-2 z-30`}>
                                             <input
                                                 type="checkbox"
                                                 checked={selectedItems.includes(item.id)}
@@ -1797,13 +2092,108 @@ export default function ResourceManager() {
                                             <button onClick={() => handleEdit(item)} className="p-2 bg-white rounded-lg text-indigo-600 hover:bg-indigo-50 shadow-md transition-all hover:text-indigo-700">
                                                 <Edit2 size={16} />
                                             </button>
-                                            <button onClick={() => handleDelete(item.id)} className="p-2 bg-white rounded-lg text-red-500 hover:bg-red-50 shadow-md transition-all hover:text-red-600">
-                                                <Trash2 size={16} />
+                                            <button
+                                                onClick={() => handleDeprecate(item.id)}
+                                                className="p-2 bg-white rounded-lg text-orange-500 hover:bg-orange-50 shadow-md transition-all hover:text-orange-600"
+                                                title="标记为弃用"
+                                                disabled={item.status === 'deprecated'}
+                                            >
+                                                <Ban size={16} />
                                             </button>
                                         </div>
                                     </div>
                                 ))}
                             </div>
+
+                            {/* 分页控件 */}
+                            {totalPages > 1 && (
+                                <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
+                                    {/* 每页数量选择 */}
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <span className="text-slate-600">每页显示：</span>
+                                        <select
+                                            value={itemsPerPage}
+                                            onChange={(e) => {
+                                                setItemsPerPage(Number(e.target.value));
+                                                setCurrentPage(1);
+                                            }}
+                                            className="px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 bg-white"
+                                        >
+                                            <option value={20}>20</option>
+                                            <option value={50}>50</option>
+                                            <option value={100}>100</option>
+                                        </select>
+                                        <span className="text-slate-500">条</span>
+                                    </div>
+
+                                    {/* 页码控制 */}
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setCurrentPage(1)}
+                                            disabled={currentPage === 1}
+                                            className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            首页
+                                        </button>
+                                        <button
+                                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                            disabled={currentPage === 1}
+                                            className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            上一页
+                                        </button>
+
+                                        {/* 页码显示 */}
+                                        <div className="flex items-center gap-1">
+                                            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                                let pageNum;
+                                                if (totalPages <= 5) {
+                                                    pageNum = i + 1;
+                                                } else if (currentPage <= 3) {
+                                                    pageNum = i + 1;
+                                                } else if (currentPage >= totalPages - 2) {
+                                                    pageNum = totalPages - 4 + i;
+                                                } else {
+                                                    pageNum = currentPage - 2 + i;
+                                                }
+
+                                                return (
+                                                    <button
+                                                        key={pageNum}
+                                                        onClick={() => setCurrentPage(pageNum)}
+                                                        className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${currentPage === pageNum
+                                                            ? 'bg-indigo-600 text-white'
+                                                            : 'border border-slate-200 hover:bg-slate-50'
+                                                            }`}
+                                                    >
+                                                        {pageNum}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <button
+                                            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                            disabled={currentPage === totalPages}
+                                            className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            下一页
+                                        </button>
+                                        <button
+                                            onClick={() => setCurrentPage(totalPages)}
+                                            disabled={currentPage === totalPages}
+                                            className="px-3 py-1.5 rounded-lg text-sm font-medium border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            末页
+                                        </button>
+                                    </div>
+
+                                    {/* 页码信息 */}
+                                    <div className="text-sm text-slate-500">
+                                        显示 {startIndex + 1}-{Math.min(endIndex, totalItems)} 条，共 {totalItems} 条
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </main>
@@ -1814,11 +2204,25 @@ export default function ResourceManager() {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
                         <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                            <h2 className="text-lg font-bold text-slate-800">资源详情</h2>
+                            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                资源详情
+                                {currentItem.status === 'deprecated' && (
+                                    <span className="text-xs bg-orange-500 text-white px-2 py-1 rounded-md flex items-center gap-1">
+                                        <Archive size={12} /> 已弃用
+                                    </span>
+                                )}
+                            </h2>
                             <button onClick={() => setIsEditModalOpen(false)} className="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600">
                                 <X size={20} />
                             </button>
                         </div>
+
+                        {currentItem.status === 'deprecated' && (
+                            <div className="px-6 py-3 bg-orange-50 border-b border-orange-200 text-sm text-orange-700 flex items-center gap-2">
+                                <AlertCircle size={16} />
+                                <span>此资源已被标记为弃用，不支持修改分类和迁移功能</span>
+                            </div>
+                        )}
 
                         <form onSubmit={handleSaveItem} className="p-6 overflow-y-auto">
                             <div className="grid grid-cols-2 gap-6 mb-6">
@@ -2598,6 +3002,141 @@ export default function ResourceManager() {
                             >
                                 关闭
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 资源快速跳转模态框 */}
+            {isJumpModalOpen && (
+                <div className="fixed inset-0 z-[140] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden">
+                        {/* 头部 */}
+                        <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-blue-600 rounded-lg text-white">
+                                        <Navigation size={20} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-slate-900">快速跳转</h2>
+                                        <p className="text-xs text-slate-500 mt-0.5">输入资源Key快速定位资源位置</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setIsJumpModalOpen(false);
+                                        setJumpResourceKey('');
+                                        setJumpSearchResults([]);
+                                    }}
+                                    className="p-2 hover:bg-slate-200 rounded-lg text-slate-400 hover:text-slate-700 transition-colors"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* 搜索输入 */}
+                        <div className="px-6 py-4 border-b border-slate-100">
+                            <div className="flex gap-2">
+                                <div className="flex-1 relative">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                    <input
+                                        type="text"
+                                        placeholder="输入资源Key、名称或显示名称..."
+                                        className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
+                                        value={jumpResourceKey}
+                                        onChange={(e) => setJumpResourceKey(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                handleJumpSearch();
+                                            }
+                                        }}
+                                        autoFocus
+                                    />
+                                </div>
+                                <button
+                                    onClick={handleJumpSearch}
+                                    className="px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+                                >
+                                    <Search size={16} />
+                                    搜索
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* 搜索结果列表 */}
+                        <div className="flex-1 overflow-y-auto p-6">
+                            {jumpSearchResults.length === 0 && (
+                                <div className="text-center py-12">
+                                    <Navigation size={48} className="mx-auto text-slate-300 mb-4" />
+                                    <p className="text-slate-500 text-sm">输入资源Key进行搜索</p>
+                                    <p className="text-slate-400 text-xs mt-2">支持模糊匹配资源Key、名称和显示名称</p>
+                                </div>
+                            )}
+
+                            {jumpSearchResults.length > 0 && (
+                                <div className="space-y-3">
+                                    <div className="text-sm text-slate-600 mb-4">
+                                        找到 <span className="font-bold text-blue-600">{jumpSearchResults.length}</span> 个匹配的资源
+                                    </div>
+                                    {jumpSearchResults.map(resource => (
+                                        <div
+                                            key={resource.id}
+                                            onClick={() => handleJumpToResource(resource)}
+                                            className="border border-slate-200 rounded-lg p-4 hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-all group"
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                {/* 资源类型图标 */}
+                                                <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-blue-100 transition-colors">
+                                                    {resource.mediaType === 'image' && <ImageIcon size={20} className="text-slate-600 group-hover:text-blue-600" />}
+                                                    {resource.mediaType === 'video' && <Video size={20} className="text-slate-600 group-hover:text-blue-600" />}
+                                                    {resource.mediaType === 'audio' && <Music size={20} className="text-slate-600 group-hover:text-blue-600" />}
+                                                </div>
+
+                                                {/* 资源信息 */}
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="font-mono text-sm font-bold text-slate-900 truncate">
+                                                            {resource.resourceKey}
+                                                        </span>
+                                                        {resource.status === 'deprecated' && (
+                                                            <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] rounded-full font-bold">
+                                                                已弃用
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {resource.displayName && (
+                                                        <div className="text-xs text-slate-600 mb-1">
+                                                            {resource.displayName}
+                                                        </div>
+                                                    )}
+                                                    <div className="flex items-center gap-2 text-[10px] text-slate-500">
+                                                        <span className="px-2 py-0.5 bg-slate-100 rounded">
+                                                            {resource.mediaType === 'image' ? '图片' : resource.mediaType === 'video' ? '视频' : '音频'}
+                                                        </span>
+                                                        <span>·</span>
+                                                        <span>{resource.category}</span>
+                                                    </div>
+                                                </div>
+
+                                                {/* 跳转按钮 */}
+                                                <div className="flex items-center">
+                                                    <ChevronRight size={20} className="text-slate-400 group-hover:text-blue-600 transition-colors" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* 底部提示 */}
+                        <div className="px-6 py-3 border-t border-slate-100 bg-slate-50">
+                            <div className="flex items-center gap-2 text-xs text-slate-500">
+                                <AlertCircle size={14} />
+                                <span>点击资源卡片将自动跳转到该资源所在的分类位置</span>
+                            </div>
                         </div>
                     </div>
                 </div>
