@@ -1669,9 +1669,10 @@ export default function ResourceManager() {
                     <button onClick={() => setIsJumpModalOpen(true)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-full transition-colors" title="快速跳转到资源">
                         <Navigation size={20} />
                     </button>
-                    <button onClick={checkResourceReferences} disabled={isCheckingRef} className="p-2 text-slate-400 hover:text-amber-600 hover:bg-slate-100 rounded-full transition-colors disabled:opacity-50" title="检查资源引用">
+                    {/* 隐藏检查资源引用按钮 */}
+                    {/* <button onClick={checkResourceReferences} disabled={isCheckingRef} className="p-2 text-slate-400 hover:text-amber-600 hover:bg-slate-100 rounded-full transition-colors disabled:opacity-50" title="检查资源引用">
                         {isCheckingRef ? <Loader size={20} className="animate-spin" /> : <Link2 size={20} />}
-                    </button>
+                    </button> */}
                     <button onClick={() => setShowLogs(!showLogs)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-100 rounded-full transition-colors" title="操作日志">
                         <History size={20} />
                     </button>
