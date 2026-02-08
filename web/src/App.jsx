@@ -4,7 +4,7 @@ import {
     Video, Music, FileAudio, Play, AlertCircle, FolderOpen, Film, Tag,
     Settings, Plus, MinusCircle, Clock, User, Calendar, Filter, History,
     Star, TrendingUp, Copy, CheckCircle, XCircle, Loader, ChevronDown, ChevronRight,
-    Link2, AlertTriangle, Archive, Navigation
+    Link2, AlertTriangle, Archive, Navigation, Trash2
 } from 'lucide-react';
 
 // --- 初始配置常量 ---
