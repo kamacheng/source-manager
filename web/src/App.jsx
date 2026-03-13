@@ -752,9 +752,19 @@ export default function ResourceManager() {
             };
         });
 
-        setLocalFolderFiles(fileList);
+        const totalCount = fileList.length;
+        setLocalFolderTotalCount(totalCount);
+
+        const filteredList = pathKeywords.length === 0
+            ? fileList
+            : fileList.filter(file => {
+                const segments = file.path.split('/').map(s => s.toLowerCase());
+                return pathKeywords.some(kw => segments.includes(kw.toLowerCase()));
+            });
+
+        setLocalFolderFiles(filteredList);
         setIsLocalFolderModalOpen(true);
-        addLog('扫描本地文件夹', `扫描了文件夹: ${folderPath}, 共 ${fileList.length} 个文件`);
+        addLog('扫描本地文件夹', `扫描了文件夹: ${folderPath}, 共 ${totalCount} 个文件, 命中 ${filteredList.length} 个`);
     };
 
     const triggerLocalFolderSelect = () => {
