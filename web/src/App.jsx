@@ -771,6 +771,24 @@ export default function ResourceManager() {
         folderInputRef.current.click();
     };
 
+    const addKeyword = () => {
+        const trimmed = keywordInput.trim();
+        if (!trimmed) return;
+        if (pathKeywords.length >= 20) return;
+        const isDuplicate = pathKeywords.some(kw => kw.toLowerCase() === trimmed.toLowerCase());
+        if (isDuplicate) { setKeywordInput(''); return; }
+        const updated = [...pathKeywords, trimmed];
+        setPathKeywords(updated);
+        localStorage.setItem('pathFilterKeywords', JSON.stringify(updated));
+        setKeywordInput('');
+    };
+
+    const removeKeyword = (index) => {
+        const updated = pathKeywords.filter((_, i) => i !== index);
+        setPathKeywords(updated);
+        localStorage.setItem('pathFilterKeywords', JSON.stringify(updated));
+    };
+
     // 检查资源是否来自本地文件夹
     const isResourceFromLocal = (resourceKey) => {
         for (const file of localFolderFiles) {
@@ -2815,6 +2833,75 @@ export default function ResourceManager() {
                                 );
                             })
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* 路径过滤关键词管理弹窗 */}
+            {isKeywordModalOpen && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+                        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                            <div>
+                                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                    <Filter size={20} className="text-indigo-600" />
+                                    路径过滤设置
+                                </h2>
+                                <p className="text-xs text-slate-500 mt-1">只导入路径中包含以下目录名的文件，留空则全量导入</p>
+                            </div>
+                            <button onClick={() => setIsKeywordModalOpen(false)} className="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600">
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="px-6 py-4">
+                            {/* 关键词列表 */}
+                            <div className="min-h-[80px] max-h-[200px] overflow-y-auto mb-4">
+                                {pathKeywords.length === 0 ? (
+                                    <p className="text-sm text-slate-400 text-center py-6">暂无关键词，将全量导入</p>
+                                ) : (
+                                    <div className="flex flex-wrap gap-2">
+                                        {pathKeywords.map((kw, index) => (
+                                            <span key={index} className="flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full text-sm font-medium">
+                                                {kw}
+                                                <button onClick={() => removeKeyword(index)} className="ml-1 text-indigo-400 hover:text-indigo-700 transition-colors">
+                                                    <X size={12} />
+                                                </button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 输入区 */}
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={keywordInput}
+                                    onChange={(e) => setKeywordInput(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
+                                    placeholder={pathKeywords.length >= 20 ? '已达上限（20个）' : '输入目录名，回车添加'}
+                                    disabled={pathKeywords.length >= 20}
+                                    className="flex-1 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:bg-slate-100 disabled:text-slate-400"
+                                />
+                                <button
+                                    onClick={addKeyword}
+                                    disabled={pathKeywords.length >= 20}
+                                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    添加
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="px-6 py-4 border-t border-slate-100 flex justify-end">
+                            <button
+                                onClick={() => setIsKeywordModalOpen(false)}
+                                className="px-6 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                            >
+                                确定
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
