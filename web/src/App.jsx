@@ -1905,6 +1905,18 @@ export default function ResourceManager() {
                                         {isUploading ? <Loader size={18} className="animate-spin" /> : <Upload size={18} />}
                                         <span className="hidden sm:inline">{isUploading ? '上传中...' : '上传资源'}</span>
                                     </button>
+                                    <button
+                                        onClick={() => setIsKeywordModalOpen(true)}
+                                        className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg shadow-md transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer font-medium whitespace-nowrap border border-slate-300"
+                                        title="设置路径过滤关键词">
+                                        <Filter size={18} />
+                                        <span className="hidden sm:inline">路径过滤</span>
+                                        {pathKeywords.length > 0 && (
+                                            <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                                                {pathKeywords.length}
+                                            </span>
+                                        )}
+                                    </button>
                                     <button onClick={triggerLocalFolderSelect}
                                         className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg shadow-md transition-all bg-green-600 text-white hover:bg-green-700 cursor-pointer font-medium whitespace-nowrap"
                                         title="读取客户端本地资源文件信息">
