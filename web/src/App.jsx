@@ -299,7 +299,6 @@ export default function ResourceManager() {
     // 本地文件夹信息
     const [isLocalFolderModalOpen, setIsLocalFolderModalOpen] = useState(false);
     const [localFolderFiles, setLocalFolderFiles] = useState([]);
-    const [allLocalFolderFiles, setAllLocalFolderFiles] = useState([]);
     const [localFolderPath, setLocalFolderPath] = useState('');
     const folderInputRef = useRef(null);
     const [localFolderTotalCount, setLocalFolderTotalCount] = useState(0);
@@ -754,7 +753,6 @@ export default function ResourceManager() {
         });
 
         const totalCount = fileList.length;
-        setAllLocalFolderFiles(fileList);
         setLocalFolderTotalCount(totalCount);
 
         const filteredList = pathKeywords.length === 0
@@ -783,27 +781,12 @@ export default function ResourceManager() {
         setPathKeywords(updated);
         localStorage.setItem('pathFilterKeywords', JSON.stringify(updated));
         setKeywordInput('');
-        if (allLocalFolderFiles.length > 0) {
-            setLocalFolderFiles(allLocalFolderFiles.filter(file => {
-                const segments = file.path.split('/').map(s => s.toLowerCase());
-                return updated.some(kw => segments.includes(kw.toLowerCase()));
-            }));
-        }
     };
 
     const removeKeyword = (index) => {
         const updated = pathKeywords.filter((_, i) => i !== index);
         setPathKeywords(updated);
         localStorage.setItem('pathFilterKeywords', JSON.stringify(updated));
-        if (allLocalFolderFiles.length > 0) {
-            setLocalFolderFiles(updated.length === 0
-                ? allLocalFolderFiles
-                : allLocalFolderFiles.filter(file => {
-                    const segments = file.path.split('/').map(s => s.toLowerCase());
-                    return updated.some(kw => segments.includes(kw.toLowerCase()));
-                })
-            );
-        }
     };
 
     // 检查资源是否来自本地文件夹
