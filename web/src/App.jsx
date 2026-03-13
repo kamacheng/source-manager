@@ -2920,7 +2920,10 @@ export default function ResourceManager() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="text-sm font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full">
-                                    共 {localFolderFiles.length} 个文件
+                                    {pathKeywords.length > 0
+                                        ? `命中 ${localFolderFiles.length} 个文件（共发现 ${localFolderTotalCount} 个）`
+                                        : `共 ${localFolderFiles.length} 个文件（未过滤）`
+                                    }
                                 </span>
                                 <button onClick={() => setIsLocalFolderModalOpen(false)} className="p-1 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600">
                                     <X size={20} />
