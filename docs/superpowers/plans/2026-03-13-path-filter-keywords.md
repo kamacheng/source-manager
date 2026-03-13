@@ -1,6 +1,6 @@
 # 路径过滤关键词功能 Implementation Plan
 
-> **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 在「读取本地资源」旁添加路径过滤关键词配置功能，扫描时只导入路径中包含指定目录名的文件。
 
@@ -19,7 +19,7 @@
 **Files:**
 - Modify: `web/src/App.jsx:299-304`（本地文件夹信息 state 区域）
 
-- [ ] **Step 1: 在 `localFolderPath` state 下方新增四个 state**
+- [x] **Step 1: 在 `localFolderPath` state 下方新增四个 state**
 
 在 [App.jsx:303](web/src/App.jsx#L303)（`const folderInputRef = useRef(null);` 这行）之前插入：
 
@@ -37,11 +37,11 @@ const [isKeywordModalOpen, setIsKeywordModalOpen] = useState(false);
 const [keywordInput, setKeywordInput] = useState('');
 ```
 
-- [ ] **Step 2: 验证页面正常渲染**
+- [x] **Step 2: 验证页面正常渲染**
 
 在浏览器打开后台页面，确认页面无报错、显示正常。
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add web/src/App.jsx
@@ -55,7 +55,7 @@ git commit -m "feat: add pathKeywords and modal state"
 **Files:**
 - Modify: `web/src/App.jsx:721-747`（handleLocalFolderSelect 函数）
 
-- [ ] **Step 1: 找到 `handleLocalFolderSelect` 函数，替换其中 setLocalFolderFiles 之后、setIsLocalFolderModalOpen 之前的部分**
+- [x] **Step 1: 找到 `handleLocalFolderSelect` 函数，替换其中 setLocalFolderFiles 之后、setIsLocalFolderModalOpen 之前的部分**
 
 将现有函数体中的以下代码：
 ```jsx
@@ -81,14 +81,14 @@ git commit -m "feat: add pathKeywords and modal state"
         addLog('扫描本地文件夹', `扫描了文件夹: ${folderPath}, 共 ${totalCount} 个文件, 命中 ${filteredList.length} 个`);
 ```
 
-- [ ] **Step 2: 验证过滤逻辑**
+- [x] **Step 2: 验证过滤逻辑**
 
 在后台页面：
 1. 点击「读取本地资源」，选择一个有多层子目录的本地文件夹
 2. 确认弹窗正常显示，此时没有关键词，应全量导入
 3. 打开浏览器开发者工具 Console，确认无报错
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add web/src/App.jsx
@@ -104,7 +104,7 @@ git commit -m "feat: apply path keyword filter in handleLocalFolderSelect"
 **Files:**
 - Modify: `web/src/App.jsx:1887-1892`（「读取本地资源」按钮区域）
 
-- [ ] **Step 1: 在「读取本地资源」按钮之前插入「路径过滤」按钮**
+- [x] **Step 1: 在「读取本地资源」按钮之前插入「路径过滤」按钮**
 
 找到以下代码：
 ```jsx
@@ -132,7 +132,7 @@ git commit -m "feat: apply path keyword filter in handleLocalFolderSelect"
                                     </button>
 ```
 
-- [ ] **Step 2: 验证按钮显示**
+- [x] **Step 2: 验证按钮显示**
 
 在后台页面「客户端内置资源」视图中，确认：
 - 「路径过滤」按钮出现在「读取本地资源」左侧
@@ -140,7 +140,7 @@ git commit -m "feat: apply path keyword filter in handleLocalFolderSelect"
 - 点击按钮暂时没反应（Modal 尚未实现），不报错即可
 - 注意：`Filter` 图标在同一视图的「高级筛选」区域也有使用（第 1898 行）。两处 Filter 图标并存如果觉得视觉上有歧义，可换用 `SlidersHorizontal` 图标（需在顶部 import 中加入）
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add web/src/App.jsx
@@ -156,7 +156,7 @@ git commit -m "feat: add path filter button with badge"
 **Files:**
 - Modify: `web/src/App.jsx:2789`（在「本地文件夹信息显示弹窗」注释之前插入新弹窗）
 
-- [ ] **Step 1: 新增 addKeyword 和 removeKeyword 辅助函数**
+- [x] **Step 1: 新增 addKeyword 和 removeKeyword 辅助函数**
 
 在 `triggerLocalFolderSelect` 函数之后（约第 751 行）插入：
 
@@ -180,7 +180,7 @@ git commit -m "feat: add path filter button with badge"
     };
 ```
 
-- [ ] **Step 2: 在 JSX 中插入关键词管理弹窗**
+- [x] **Step 2: 在 JSX 中插入关键词管理弹窗**
 
 找到注释 `{/* 本地文件夹信息显示弹窗 */}`（约第 2789 行），在其**之前**插入：
 
@@ -255,7 +255,7 @@ git commit -m "feat: add path filter button with badge"
             )}
 ```
 
-- [ ] **Step 3: 验证弹窗功能**
+- [x] **Step 3: 验证弹窗功能**
 
 在后台页面：
 1. 点击「路径过滤」→ 弹窗打开，显示「暂无关键词，将全量导入」
@@ -265,7 +265,7 @@ git commit -m "feat: add path filter button with badge"
 5. 点「确定」→ 弹窗关闭
 6. 刷新页面 → 关键词仍存在（localStorage 持久化验证）
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add web/src/App.jsx
@@ -281,7 +281,7 @@ git commit -m "feat: add keyword management modal with localStorage persistence"
 **Files:**
 - Modify: `web/src/App.jsx:2801-2804`（弹窗右上角文件数量显示）
 
-- [ ] **Step 1: 替换文件数量显示区域**
+- [x] **Step 1: 替换文件数量显示区域**
 
 找到以下代码：
 ```jsx
@@ -300,7 +300,7 @@ git commit -m "feat: add keyword management modal with localStorage persistence"
                                 </span>
 ```
 
-- [ ] **Step 2: 端到端验证**
+- [x] **Step 2: 端到端验证**
 
 在后台页面完整走一遍流程：
 1. 点「路径过滤」，添加一个在你测试目录中存在的子目录名（如 `images`）
@@ -309,7 +309,7 @@ git commit -m "feat: add keyword management modal with localStorage persistence"
 4. 扫描结果弹窗标题区应显示 `命中 X 个文件（共发现 Y 个）`，且 X < Y
 5. 删除所有关键词后重新扫描，标题区应显示 `共 Y 个文件（未过滤）`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add web/src/App.jsx
@@ -320,8 +320,17 @@ git commit -m "feat: show filter hit count in scan result modal header"
 
 ## 完成标准
 
-- [ ] 「路径过滤」按钮出现在「读取本地资源」左侧，有关键词时显示数字角标
-- [ ] 关键词弹窗支持增删，回车可添加，重复关键词自动忽略，上限 20 个
-- [ ] 刷新页面后关键词仍存在（localStorage 持久化）
-- [ ] 扫描时应用过滤，弹窗标题显示命中数/总数
-- [ ] 无关键词时全量导入，行为与改动前一致
+- [x] 「路径过滤」按钮出现在「读取本地资源」左侧，有关键词时显示数字角标
+- [x] 关键词弹窗支持增删，回车可添加，重复关键词自动忽略，上限 20 个
+- [x] 刷新页面后关键词仍存在（localStorage 持久化）
+- [x] 扫描时应用过滤，弹窗标题显示命中数/总数
+- [x] 无关键词时全量导入，行为与改动前一致
+
+---
+
+## 实施后追加变更（计划外）
+
+以下变更在计划执行后根据需求调整追加：
+
+1. **按钮按标签页显示**：「上传资源」仅在「后台上传资源」视图显示；「路径过滤」+「读取本地资源」仅在「客户端内置资源」视图显示
+2. **放弃实时过滤**：移除 `allLocalFolderFiles` 状态，只存储过滤后的结果。关键词变更后需重新扫描；原计划中 `addKeyword`/`removeKeyword` 的动态重新过滤逻辑已删除
