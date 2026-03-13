@@ -301,6 +301,17 @@ export default function ResourceManager() {
     const [localFolderFiles, setLocalFolderFiles] = useState([]);
     const [localFolderPath, setLocalFolderPath] = useState('');
     const folderInputRef = useRef(null);
+    const [localFolderTotalCount, setLocalFolderTotalCount] = useState(0);
+    const [pathKeywords, setPathKeywords] = useState(() => {
+        try {
+            const saved = localStorage.getItem('pathFilterKeywords');
+            return saved ? JSON.parse(saved) : [];
+        } catch {
+            return [];
+        }
+    });
+    const [isKeywordModalOpen, setIsKeywordModalOpen] = useState(false);
+    const [keywordInput, setKeywordInput] = useState('');
     const [currentView, setCurrentView] = useState('uploaded'); // 'uploaded' 或 'builtin'
 
     // 资源引用检查
