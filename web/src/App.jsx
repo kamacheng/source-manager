@@ -299,6 +299,7 @@ export default function ResourceManager() {
     // 本地文件夹信息
     const [isLocalFolderModalOpen, setIsLocalFolderModalOpen] = useState(false);
     const [localFolderFiles, setLocalFolderFiles] = useState([]);
+    const [allLocalFolderFiles, setAllLocalFolderFiles] = useState([]);
     const [localFolderPath, setLocalFolderPath] = useState('');
     const folderInputRef = useRef(null);
     const [localFolderTotalCount, setLocalFolderTotalCount] = useState(0);
@@ -753,6 +754,7 @@ export default function ResourceManager() {
         });
 
         const totalCount = fileList.length;
+        setAllLocalFolderFiles(fileList);
         setLocalFolderTotalCount(totalCount);
 
         const filteredList = pathKeywords.length === 0
@@ -781,12 +783,27 @@ export default function ResourceManager() {
         setPathKeywords(updated);
         localStorage.setItem('pathFilterKeywords', JSON.stringify(updated));
         setKeywordInput('');
+        if (allLocalFolderFiles.length > 0) {
+            setLocalFolderFiles(allLocalFolderFiles.filter(file => {
+                const segments = file.path.split('/').map(s => s.toLowerCase());
+                return updated.some(kw => segments.includes(kw.toLowerCase()));
+            }));
+        }
     };
 
     const removeKeyword = (index) => {
         const updated = pathKeywords.filter((_, i) => i !== index);
         setPathKeywords(updated);
         localStorage.setItem('pathFilterKeywords', JSON.stringify(updated));
+        if (allLocalFolderFiles.length > 0) {
+            setLocalFolderFiles(updated.length === 0
+                ? allLocalFolderFiles
+                : allLocalFolderFiles.filter(file => {
+                    const segments = file.path.split('/').map(s => s.toLowerCase());
+                    return updated.some(kw => segments.includes(kw.toLowerCase()));
+                })
+            );
+        }
     };
 
     // 检查资源是否来自本地文件夹
@@ -1917,30 +1934,36 @@ export default function ResourceManager() {
                                         onKeyDown={(e) => e.key === 'Enter' && addSearchHistory(searchTerm)} />
                                 </div>
                                 <div className="flex items-center gap-2 flex-shrink-0 w-full md:w-auto">
-                                    <button onClick={triggerBatchUpload} disabled={!isSubCategorySelected() || isUploading}
-                                        className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg shadow-md transition-all font-medium whitespace-nowrap ${isSubCategorySelected() && !isUploading ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer' : 'bg-slate-300 text-slate-500 cursor-not-allowed opacity-60'}`}
-                                        title="上传资源文件到后台">
-                                        {isUploading ? <Loader size={18} className="animate-spin" /> : <Upload size={18} />}
-                                        <span className="hidden sm:inline">{isUploading ? '上传中...' : '上传资源'}</span>
-                                    </button>
-                                    <button
-                                        onClick={() => setIsKeywordModalOpen(true)}
-                                        className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg shadow-md transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer font-medium whitespace-nowrap border border-slate-300"
-                                        title="设置路径过滤关键词">
-                                        <Filter size={18} />
-                                        <span className="hidden sm:inline">路径过滤</span>
-                                        {pathKeywords.length > 0 && (
-                                            <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                                                {pathKeywords.length}
-                                            </span>
-                                        )}
-                                    </button>
-                                    <button onClick={triggerLocalFolderSelect}
-                                        className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg shadow-md transition-all bg-green-600 text-white hover:bg-green-700 cursor-pointer font-medium whitespace-nowrap"
-                                        title="读取客户端本地资源文件信息">
-                                        <FolderOpen size={18} />
-                                        <span className="hidden sm:inline">读取本地资源</span>
-                                    </button>
+                                    {currentView === 'uploaded' && (
+                                        <button onClick={triggerBatchUpload} disabled={!isSubCategorySelected() || isUploading}
+                                            className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg shadow-md transition-all font-medium whitespace-nowrap ${isSubCategorySelected() && !isUploading ? 'bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer' : 'bg-slate-300 text-slate-500 cursor-not-allowed opacity-60'}`}
+                                            title="上传资源文件到后台">
+                                            {isUploading ? <Loader size={18} className="animate-spin" /> : <Upload size={18} />}
+                                            <span className="hidden sm:inline">{isUploading ? '上传中...' : '上传资源'}</span>
+                                        </button>
+                                    )}
+                                    {currentView === 'builtin' && (
+                                        <>
+                                            <button
+                                                onClick={() => setIsKeywordModalOpen(true)}
+                                                className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg shadow-md transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 cursor-pointer font-medium whitespace-nowrap border border-slate-300"
+                                                title="设置路径过滤关键词">
+                                                <Filter size={18} />
+                                                <span className="hidden sm:inline">路径过滤</span>
+                                                {pathKeywords.length > 0 && (
+                                                    <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                                                        {pathKeywords.length}
+                                                    </span>
+                                                )}
+                                            </button>
+                                            <button onClick={triggerLocalFolderSelect}
+                                                className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg shadow-md transition-all bg-green-600 text-white hover:bg-green-700 cursor-pointer font-medium whitespace-nowrap"
+                                                title="读取客户端本地资源文件信息">
+                                                <FolderOpen size={18} />
+                                                <span className="hidden sm:inline">读取本地资源</span>
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
 
